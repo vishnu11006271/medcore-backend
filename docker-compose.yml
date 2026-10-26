@@ -1,0 +1,33 @@
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: medcore-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: medcore
+      POSTGRES_PASSWORD: local_dev_password
+      POSTGRES_DB: medcore_hms
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medcore -d medcore_hms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: medcore-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  postgres_data:
+  redis_data:
