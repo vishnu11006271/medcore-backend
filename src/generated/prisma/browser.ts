@@ -112,3 +112,8 @@ export type RefreshToken = Prisma.RefreshTokenModel
  * 
  */
 export type EmailOtp = Prisma.EmailOtpModel
+/**
+ * Model DoctorAvailability
+ * 
+ */
+export type DoctorAvailability = Prisma.DoctorAvailabilityModel

@@ -185,6 +185,8 @@ model Doctor {
   prescriptions  Prescription[]
   labOrders      LabOrder[]     @relation("LabOrdersByDoctor")
 
+  availabilities DoctorAvailability[]
+
   @@index([departmentId])
 }
 
@@ -477,6 +479,22 @@ model EmailOtp {
 
   @@index([email, purpose, expiresAt])
   @@index([userId, createdAt])
+}
+
+model DoctorAvailability {
+  id                   String   @id @default(uuid())
+  doctorId             String
+  dayOfWeek            Int
+  startMinute          Int
+  endMinute            Int
+  slotDurationMinutes  Int      @default(30)
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@index([doctorId, dayOfWeek, isActive])
 }
 
 

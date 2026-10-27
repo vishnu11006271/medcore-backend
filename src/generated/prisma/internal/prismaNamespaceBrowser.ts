@@ -69,7 +69,8 @@ export const ModelName = {
   Notification: 'Notification',
   AuditLog: 'AuditLog',
   RefreshToken: 'RefreshToken',
-  EmailOtp: 'EmailOtp'
+  EmailOtp: 'EmailOtp',
+  DoctorAvailability: 'DoctorAvailability'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -388,6 +389,21 @@ export const EmailOtpScalarFieldEnum = {
 } as const
 
 export type EmailOtpScalarFieldEnum = (typeof EmailOtpScalarFieldEnum)[keyof typeof EmailOtpScalarFieldEnum]
+
+
+export const DoctorAvailabilityScalarFieldEnum = {
+  id: 'id',
+  doctorId: 'doctorId',
+  dayOfWeek: 'dayOfWeek',
+  startMinute: 'startMinute',
+  endMinute: 'endMinute',
+  slotDurationMinutes: 'slotDurationMinutes',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DoctorAvailabilityScalarFieldEnum = (typeof DoctorAvailabilityScalarFieldEnum)[keyof typeof DoctorAvailabilityScalarFieldEnum]
 
 
 export const SortOrder = {

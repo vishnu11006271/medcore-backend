@@ -2,6 +2,7 @@
 import {
   IsEmail,
   IsString,
+  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -25,4 +26,7 @@ export class RegisterDto {
   @MinLength(12)
   @MaxLength(128)
   password: string;
+
+  @IsUUID()
+  hospitalId!: string;
 }

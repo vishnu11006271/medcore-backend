@@ -16,6 +16,7 @@ import { randomInt } from 'crypto';
 import { RegisterDto } from './dto/register.dto.js';
 import { VerifyEmailDto } from './dto/verify-email.dto.js';
 import { createHash, randomBytes } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class AuthService {
@@ -118,7 +119,53 @@ export class AuthService {
     const codeHash = await bcrypt.hash(otp, 10);
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
+    // const result = await this.prisma.$transaction(async (tx) => {
+    //   const user = await tx.user.create({
+    //     data: {
+    //       email,
+    //       firstName: dto.firstName.trim(),
+    //       lastName: dto.lastName.trim(),
+    //       passwordHash,
+    //       role: 'PATIENT',
+    //       isActive: true,
+    //     },
+    //     select: {
+    //       id: true,
+    //       email: true,
+    //       firstName: true,
+    //       lastName: true,
+    //       role: true,
+    //     },
+    //   });
+
+    //   await tx.emailOtp.create({
+    //     data: {
+    //       userId: user.id,
+    //       email,
+    //       codeHash,
+    //       purpose: 'EMAIL_VERIFICATION',
+    //       expiresAt,
+    //     },
+    //   });
+
+    //   return user;
+    // });
     const result = await this.prisma.$transaction(async (tx) => {
+      const hospital = await tx.hospital.findUnique({
+        where: { id: dto.hospitalId },
+        select: {
+          id: true,
+          status: true,
+        },
+      });
+
+      if (!hospital || hospital.status !== 'VERIFIED') {
+        throw new BadRequestException({
+          code: 'INVALID_HOSPITAL',
+          message: 'Please select a valid, verified hospital.',
+        });
+      }
+
       const user = await tx.user.create({
         data: {
           email,
@@ -127,6 +174,7 @@ export class AuthService {
           passwordHash,
           role: 'PATIENT',
           isActive: true,
+          hospitalId: hospital.id,
         },
         select: {
           id: true,
@@ -134,6 +182,14 @@ export class AuthService {
           firstName: true,
           lastName: true,
           role: true,
+        },
+      });
+
+      const patient = await tx.patient.create({
+        data: {
+          userId: user.id,
+          hospitalId: hospital.id,
+          patientNumber: `PAT-${randomUUID()}`,
         },
       });
 
@@ -147,7 +203,10 @@ export class AuthService {
         },
       });
 
-      return user;
+      return {
+        ...user,
+        patientId: patient.id,
+      };
     });
 
     // Temporary local development delivery.
