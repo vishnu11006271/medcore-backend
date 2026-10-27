@@ -9,6 +9,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateAppointmentDto } from './dto/create-appointment.dto.js';
 
 const BLOCKING_STATUSES = [
+  'PENDING',
   'SCHEDULED',
   'CONFIRMED',
   'CHECKED_IN',
@@ -230,7 +231,7 @@ export class AppointmentsService {
           departmentId: doctor.department.id,
           scheduledAt: requestedStart,
           durationMinutes,
-          status: 'SCHEDULED',
+          status: 'PENDING',
           reason: dto.reason,
         },
       });
@@ -238,4 +239,153 @@ export class AppointmentsService {
 
     return result;
   }
+
+  
+  async changeAppointmentStatus(
+    appointmentId: string,
+    actorUserId: string,
+    actorRole: string,
+    action: 'confirm' | 'start' | 'complete' | 'cancel',
+  ) {
+    const appointment = await this.prisma.appointment.findUnique({
+      where: { id: appointmentId },
+      include: {
+        doctor: {
+          select: { userId: true },
+        },
+        patient: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    if (!appointment) {
+      throw new NotFoundException('Appointment not found');
+    }
+
+    let targetStatus:
+      | 'CONFIRMED'
+      | 'IN_PROGRESS'
+      | 'COMPLETED'
+      | 'CANCELLED';
+
+    let allowedStatuses: string[];
+
+    switch (action) {
+      case 'confirm':
+        if (
+          actorRole !== 'HOSPITAL_ADMIN' &&
+          actorRole !== 'RECEPTIONIST'
+        ) {
+          throw new ForbiddenException(
+            'Only hospital administrators or receptionists can confirm appointments',
+          );
+        }
+
+        targetStatus = 'CONFIRMED';
+        allowedStatuses = ['PENDING', 'SCHEDULED'];
+        break;
+
+      case 'start':
+        targetStatus = 'IN_PROGRESS';
+        allowedStatuses = ['CONFIRMED', 'CHECKED_IN'];
+        break;
+
+      case 'complete':
+        targetStatus = 'COMPLETED';
+        allowedStatuses = ['IN_PROGRESS'];
+        break;
+
+      case 'cancel':
+        targetStatus = 'CANCELLED';
+        allowedStatuses = ['PENDING', 'SCHEDULED', 'CONFIRMED'];
+        break;
+    }
+
+    // Patients can cancel only their own appointments.
+    if (action === 'cancel' && actorRole === 'PATIENT') {
+      if (appointment.patient.userId !== actorUserId) {
+        throw new ForbiddenException(
+          'You can cancel only your own appointments',
+        );
+      }
+    } else if (
+      action === 'start' ||
+      action === 'complete'
+    ) {
+      if (actorRole === 'DOCTOR') {
+        if (appointment.doctor.userId !== actorUserId) {
+          throw new ForbiddenException(
+            'You can manage only your own appointments',
+          );
+        }
+      } else if (
+        actorRole !== 'HOSPITAL_ADMIN' &&
+        actorRole !== 'RECEPTIONIST'
+      ) {
+        throw new ForbiddenException(
+          'You are not authorized to change this appointment status',
+        );
+      }
+    } else if (
+      action === 'cancel' &&
+      actorRole !== 'PATIENT' &&
+      actorRole !== 'HOSPITAL_ADMIN' &&
+      actorRole !== 'RECEPTIONIST'
+    ) {
+      throw new ForbiddenException(
+        'You are not authorized to cancel this appointment',
+      );
+    }
+
+    // Staff must belong to the same hospital as the appointment.
+    if (
+      actorRole === 'HOSPITAL_ADMIN' ||
+      actorRole === 'RECEPTIONIST'
+    ) {
+      const actor = await this.prisma.user.findUnique({
+        where: { id: actorUserId },
+        select: { hospitalId: true, isActive: true },
+      });
+
+      if (
+        !actor ||
+        !actor.isActive ||
+        actor.hospitalId !== appointment.hospitalId
+      ) {
+        throw new ForbiddenException(
+          'You cannot manage appointments for this hospital',
+        );
+      }
+    }
+
+    if (!allowedStatuses.includes(appointment.status)) {
+      throw new ConflictException(
+        `Cannot ${action} an appointment with status ${appointment.status}`,
+      );
+    }
+
+    // Conditional update prevents overwriting a status changed
+    // concurrently by another request.
+    const updateResult = await this.prisma.appointment.updateMany({
+      where: {
+        id: appointmentId,
+        status: appointment.status,
+      },
+      data: {
+        status: targetStatus,
+      },
+    });
+
+    if (updateResult.count === 0) {
+      throw new ConflictException(
+        'The appointment status changed. Refresh and try again.',
+      );
+    }
+
+    return this.prisma.appointment.findUnique({
+      where: { id: appointmentId },
+    });
+  }
+
 }

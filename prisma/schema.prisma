@@ -34,6 +34,7 @@ enum HospitalStatus {
 }
 
 enum AppointmentStatus {
+  PENDING
   SCHEDULED
   CONFIRMED
   CHECKED_IN
@@ -238,7 +239,7 @@ model Appointment {
   departmentId   String
   scheduledAt    DateTime
   durationMinutes Int              @default(30)
-  status         AppointmentStatus @default(SCHEDULED)
+  status         AppointmentStatus @default(PENDING)
   reason         String?
   notes          String?
   createdAt      DateTime          @default(now())

@@ -35,6 +35,7 @@ export type HospitalStatus = (typeof HospitalStatus)[keyof typeof HospitalStatus
 
 
 export const AppointmentStatus = {
+  PENDING: 'PENDING',
   SCHEDULED: 'SCHEDULED',
   CONFIRMED: 'CONFIRMED',
   CHECKED_IN: 'CHECKED_IN',
