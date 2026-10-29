@@ -70,7 +70,9 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   RefreshToken: 'RefreshToken',
   EmailOtp: 'EmailOtp',
-  DoctorAvailability: 'DoctorAvailability'
+  DoctorAvailability: 'DoctorAvailability',
+  VitalSign: 'VitalSign',
+  PatientAllergy: 'PatientAllergy'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -216,6 +218,7 @@ export const MedicalRecordScalarFieldEnum = {
   diagnosis: 'diagnosis',
   symptoms: 'symptoms',
   clinicalNotes: 'clinicalNotes',
+  treatmentPlan: 'treatmentPlan',
   status: 'status',
   recordedAt: 'recordedAt',
   updatedAt: 'updatedAt'
@@ -404,6 +407,42 @@ export const DoctorAvailabilityScalarFieldEnum = {
 } as const
 
 export type DoctorAvailabilityScalarFieldEnum = (typeof DoctorAvailabilityScalarFieldEnum)[keyof typeof DoctorAvailabilityScalarFieldEnum]
+
+
+export const VitalSignScalarFieldEnum = {
+  id: 'id',
+  medicalRecordId: 'medicalRecordId',
+  systolicBP: 'systolicBP',
+  diastolicBP: 'diastolicBP',
+  pulseBpm: 'pulseBpm',
+  temperatureC: 'temperatureC',
+  respiratoryRate: 'respiratoryRate',
+  oxygenSaturation: 'oxygenSaturation',
+  heightCm: 'heightCm',
+  weightKg: 'weightKg',
+  notes: 'notes',
+  recordedAt: 'recordedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type VitalSignScalarFieldEnum = (typeof VitalSignScalarFieldEnum)[keyof typeof VitalSignScalarFieldEnum]
+
+
+export const PatientAllergyScalarFieldEnum = {
+  id: 'id',
+  hospitalId: 'hospitalId',
+  patientId: 'patientId',
+  allergen: 'allergen',
+  type: 'type',
+  reaction: 'reaction',
+  severity: 'severity',
+  notes: 'notes',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PatientAllergyScalarFieldEnum = (typeof PatientAllergyScalarFieldEnum)[keyof typeof PatientAllergyScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -117,3 +117,13 @@ export type EmailOtp = Prisma.EmailOtpModel
  * 
  */
 export type DoctorAvailability = Prisma.DoctorAvailabilityModel
+/**
+ * Model VitalSign
+ * 
+ */
+export type VitalSign = Prisma.VitalSignModel
+/**
+ * Model PatientAllergy
+ * 
+ */
+export type PatientAllergy = Prisma.PatientAllergyModel

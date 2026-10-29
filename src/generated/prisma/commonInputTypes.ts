@@ -450,6 +450,67 @@ export type EnumOtpPurposeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumOtpPurposeFilter<$PrismaModel>
 }
 
+export type FloatNullableFilter<$PrismaModel = never> = {
+  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null
+  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
+  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
+  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
+}
+
+export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null
+  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
+  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
+  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _avg?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+  _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type EnumAllergyTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.AllergyType | Prisma.EnumAllergyTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.AllergyType[] | Prisma.ListEnumAllergyTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AllergyType[] | Prisma.ListEnumAllergyTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAllergyTypeFilter<$PrismaModel> | $Enums.AllergyType
+}
+
+export type EnumAllergySeverityNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.AllergySeverity | Prisma.EnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  in?: $Enums.AllergySeverity[] | Prisma.ListEnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.AllergySeverity[] | Prisma.ListEnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumAllergySeverityNullableFilter<$PrismaModel> | $Enums.AllergySeverity | null
+}
+
+export type EnumAllergyTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AllergyType | Prisma.EnumAllergyTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.AllergyType[] | Prisma.ListEnumAllergyTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AllergyType[] | Prisma.ListEnumAllergyTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAllergyTypeWithAggregatesFilter<$PrismaModel> | $Enums.AllergyType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAllergyTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAllergyTypeFilter<$PrismaModel>
+}
+
+export type EnumAllergySeverityNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AllergySeverity | Prisma.EnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  in?: $Enums.AllergySeverity[] | Prisma.ListEnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.AllergySeverity[] | Prisma.ListEnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumAllergySeverityNullableWithAggregatesFilter<$PrismaModel> | $Enums.AllergySeverity | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAllergySeverityNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAllergySeverityNullableFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -870,6 +931,56 @@ export type NestedEnumOtpPurposeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOtpPurposeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOtpPurposeFilter<$PrismaModel>
+}
+
+export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null
+  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
+  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
+  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _avg?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+  _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumAllergyTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.AllergyType | Prisma.EnumAllergyTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.AllergyType[] | Prisma.ListEnumAllergyTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AllergyType[] | Prisma.ListEnumAllergyTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAllergyTypeFilter<$PrismaModel> | $Enums.AllergyType
+}
+
+export type NestedEnumAllergySeverityNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.AllergySeverity | Prisma.EnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  in?: $Enums.AllergySeverity[] | Prisma.ListEnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.AllergySeverity[] | Prisma.ListEnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumAllergySeverityNullableFilter<$PrismaModel> | $Enums.AllergySeverity | null
+}
+
+export type NestedEnumAllergyTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AllergyType | Prisma.EnumAllergyTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.AllergyType[] | Prisma.ListEnumAllergyTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AllergyType[] | Prisma.ListEnumAllergyTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAllergyTypeWithAggregatesFilter<$PrismaModel> | $Enums.AllergyType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAllergyTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAllergyTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumAllergySeverityNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AllergySeverity | Prisma.EnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  in?: $Enums.AllergySeverity[] | Prisma.ListEnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.AllergySeverity[] | Prisma.ListEnumAllergySeverityFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumAllergySeverityNullableWithAggregatesFilter<$PrismaModel> | $Enums.AllergySeverity | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAllergySeverityNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAllergySeverityNullableFilter<$PrismaModel>
 }
 
 

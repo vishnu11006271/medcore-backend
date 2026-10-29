@@ -9,6 +9,11 @@ import { DepartmentsModule } from './departments/departments.module.js';
 import { DoctorsModule } from './doctors/doctors.module.js';
 import { AvailabilityModule } from './availability/availability.module.js';
 import { AppointmentsModule } from './appointments/appointments.module.js';
+import { MedicalRecordsModule } from './medical-records/medical-records.module.js';
+import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
+import { PatientAllergiesService } from './patient-allergies/patient-allergies.service.js';
+import { PatientAllergiesController } from './patient-allergies/patient-allergies.controller.js';
+import { PatientAllergiesModule } from './patient-allergies/patient-allergies.module.js';
 
 @Module({
   imports: [
@@ -21,8 +26,11 @@ import { AppointmentsModule } from './appointments/appointments.module.js';
     DepartmentsModule,
     DoctorsModule,
     AvailabilityModule,
-    AppointmentsModule],
-  controllers: [AppController],
-  providers: [AppService],
+    AppointmentsModule,
+    MedicalRecordsModule,
+    PrescriptionsModule,
+    PatientAllergiesModule],
+  controllers: [AppController, PatientAllergiesController],
+  providers: [AppService, PatientAllergiesService],
 })
 export class AppModule {}

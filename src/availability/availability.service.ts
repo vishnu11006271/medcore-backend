@@ -198,7 +198,7 @@ export class AvailabilityService {
             lt: endOfDay,
         },
         status: {
-            in: ['SCHEDULED', 'CONFIRMED','CHECKED_IN', 'IN_PROGRESS'],
+            in: ['PENDING','SCHEDULED', 'CONFIRMED','CHECKED_IN', 'IN_PROGRESS'],
         },
         },
         select: {

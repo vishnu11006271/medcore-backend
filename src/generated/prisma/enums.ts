@@ -114,3 +114,23 @@ export const OtpPurpose = {
 } as const
 
 export type OtpPurpose = (typeof OtpPurpose)[keyof typeof OtpPurpose]
+
+
+export const AllergyType = {
+  MEDICATION: 'MEDICATION',
+  FOOD: 'FOOD',
+  ENVIRONMENTAL: 'ENVIRONMENTAL',
+  LATEX: 'LATEX',
+  OTHER: 'OTHER'
+} as const
+
+export type AllergyType = (typeof AllergyType)[keyof typeof AllergyType]
+
+
+export const AllergySeverity = {
+  MILD: 'MILD',
+  MODERATE: 'MODERATE',
+  SEVERE: 'SEVERE'
+} as const
+
+export type AllergySeverity = (typeof AllergySeverity)[keyof typeof AllergySeverity]

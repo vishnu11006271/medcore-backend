@@ -91,6 +91,20 @@ enum OtpPurpose {
   LOGIN_VERIFICATION
 }
 
+enum AllergyType {
+  MEDICATION
+  FOOD
+  ENVIRONMENTAL
+  LATEX
+  OTHER
+}
+
+enum AllergySeverity {
+  MILD
+  MODERATE
+  SEVERE
+}
+
 model Hospital {
   id                 String         @id @default(uuid())
   name               String
@@ -116,6 +130,7 @@ model Hospital {
   invoices           Invoice[]
   notifications      Notification[]
   auditLogs          AuditLog[]
+  allergies          PatientAllergy[]
 
   @@index([status, createdAt])
 }
@@ -209,6 +224,7 @@ model Patient {
   appointments   Appointment[]
   medicalRecords MedicalRecord[]
   invoices       Invoice[]
+  allergies      PatientAllergy[]
 
   @@unique([hospitalId, patientNumber])
   @@index([hospitalId, createdAt])
@@ -267,6 +283,7 @@ model MedicalRecord {
   diagnosis     String?
   symptoms      String?
   clinicalNotes String?
+  treatmentPlan String?
   status        RecordStatus @default(DRAFT)
   recordedAt    DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
@@ -277,6 +294,7 @@ model MedicalRecord {
   doctor       Doctor         @relation(fields: [doctorId], references: [id], onDelete: Restrict)
   prescriptions Prescription[]
   labOrders     LabOrder[]
+  vitals VitalSign[]
 
   @@index([hospitalId, patientId, recordedAt])
   @@index([doctorId, recordedAt])
@@ -496,6 +514,51 @@ model DoctorAvailability {
   doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 
   @@index([doctorId, dayOfWeek, isActive])
+}
+
+model VitalSign {
+  id             String   @id @default(uuid())
+  medicalRecordId String
+
+  systolicBP      Int?
+  diastolicBP     Int?
+  pulseBpm        Int?
+  temperatureC    Float?
+  respiratoryRate Int?
+  oxygenSaturation Float?
+  heightCm        Float?
+  weightKg        Float?
+  notes           String?
+
+  recordedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  medicalRecord MedicalRecord @relation(fields: [medicalRecordId], references: [id], onDelete: Restrict)
+
+  @@index([medicalRecordId, recordedAt])
+}
+
+model PatientAllergy {
+  id        String          @id @default(uuid())
+  hospitalId String
+  patientId  String
+
+  allergen  String
+  type      AllergyType
+  reaction  String?
+  severity  AllergySeverity?
+  notes     String?
+  isActive  Boolean         @default(true)
+
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  hospital Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  @@index([hospitalId, patientId, isActive])
+  @@index([patientId, createdAt])
 }
 
 

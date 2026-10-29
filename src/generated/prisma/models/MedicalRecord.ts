@@ -33,6 +33,7 @@ export type MedicalRecordMinAggregateOutputType = {
   diagnosis: string | null
   symptoms: string | null
   clinicalNotes: string | null
+  treatmentPlan: string | null
   status: $Enums.RecordStatus | null
   recordedAt: Date | null
   updatedAt: Date | null
@@ -47,6 +48,7 @@ export type MedicalRecordMaxAggregateOutputType = {
   diagnosis: string | null
   symptoms: string | null
   clinicalNotes: string | null
+  treatmentPlan: string | null
   status: $Enums.RecordStatus | null
   recordedAt: Date | null
   updatedAt: Date | null
@@ -61,6 +63,7 @@ export type MedicalRecordCountAggregateOutputType = {
   diagnosis: number
   symptoms: number
   clinicalNotes: number
+  treatmentPlan: number
   status: number
   recordedAt: number
   updatedAt: number
@@ -77,6 +80,7 @@ export type MedicalRecordMinAggregateInputType = {
   diagnosis?: true
   symptoms?: true
   clinicalNotes?: true
+  treatmentPlan?: true
   status?: true
   recordedAt?: true
   updatedAt?: true
@@ -91,6 +95,7 @@ export type MedicalRecordMaxAggregateInputType = {
   diagnosis?: true
   symptoms?: true
   clinicalNotes?: true
+  treatmentPlan?: true
   status?: true
   recordedAt?: true
   updatedAt?: true
@@ -105,6 +110,7 @@ export type MedicalRecordCountAggregateInputType = {
   diagnosis?: true
   symptoms?: true
   clinicalNotes?: true
+  treatmentPlan?: true
   status?: true
   recordedAt?: true
   updatedAt?: true
@@ -192,6 +198,7 @@ export type MedicalRecordGroupByOutputType = {
   diagnosis: string | null
   symptoms: string | null
   clinicalNotes: string | null
+  treatmentPlan: string | null
   status: $Enums.RecordStatus
   recordedAt: Date
   updatedAt: Date
@@ -227,6 +234,7 @@ export type MedicalRecordWhereInput = {
   diagnosis?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   symptoms?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   clinicalNotes?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
+  treatmentPlan?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   status?: Prisma.EnumRecordStatusFilter<"MedicalRecord"> | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFilter<"MedicalRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MedicalRecord"> | Date | string
@@ -236,6 +244,7 @@ export type MedicalRecordWhereInput = {
   doctor?: Prisma.XOR<Prisma.DoctorScalarRelationFilter, Prisma.DoctorWhereInput>
   prescriptions?: Prisma.PrescriptionListRelationFilter
   labOrders?: Prisma.LabOrderListRelationFilter
+  vitals?: Prisma.VitalSignListRelationFilter
 }
 
 export type MedicalRecordOrderByWithRelationInput = {
@@ -247,6 +256,7 @@ export type MedicalRecordOrderByWithRelationInput = {
   diagnosis?: Prisma.SortOrderInput | Prisma.SortOrder
   symptoms?: Prisma.SortOrderInput | Prisma.SortOrder
   clinicalNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  treatmentPlan?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -256,6 +266,7 @@ export type MedicalRecordOrderByWithRelationInput = {
   doctor?: Prisma.DoctorOrderByWithRelationInput
   prescriptions?: Prisma.PrescriptionOrderByRelationAggregateInput
   labOrders?: Prisma.LabOrderOrderByRelationAggregateInput
+  vitals?: Prisma.VitalSignOrderByRelationAggregateInput
 }
 
 export type MedicalRecordWhereUniqueInput = Prisma.AtLeast<{
@@ -270,6 +281,7 @@ export type MedicalRecordWhereUniqueInput = Prisma.AtLeast<{
   diagnosis?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   symptoms?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   clinicalNotes?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
+  treatmentPlan?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   status?: Prisma.EnumRecordStatusFilter<"MedicalRecord"> | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFilter<"MedicalRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MedicalRecord"> | Date | string
@@ -279,6 +291,7 @@ export type MedicalRecordWhereUniqueInput = Prisma.AtLeast<{
   doctor?: Prisma.XOR<Prisma.DoctorScalarRelationFilter, Prisma.DoctorWhereInput>
   prescriptions?: Prisma.PrescriptionListRelationFilter
   labOrders?: Prisma.LabOrderListRelationFilter
+  vitals?: Prisma.VitalSignListRelationFilter
 }, "id" | "appointmentId">
 
 export type MedicalRecordOrderByWithAggregationInput = {
@@ -290,6 +303,7 @@ export type MedicalRecordOrderByWithAggregationInput = {
   diagnosis?: Prisma.SortOrderInput | Prisma.SortOrder
   symptoms?: Prisma.SortOrderInput | Prisma.SortOrder
   clinicalNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  treatmentPlan?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -310,6 +324,7 @@ export type MedicalRecordScalarWhereWithAggregatesInput = {
   diagnosis?: Prisma.StringNullableWithAggregatesFilter<"MedicalRecord"> | string | null
   symptoms?: Prisma.StringNullableWithAggregatesFilter<"MedicalRecord"> | string | null
   clinicalNotes?: Prisma.StringNullableWithAggregatesFilter<"MedicalRecord"> | string | null
+  treatmentPlan?: Prisma.StringNullableWithAggregatesFilter<"MedicalRecord"> | string | null
   status?: Prisma.EnumRecordStatusWithAggregatesFilter<"MedicalRecord"> | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeWithAggregatesFilter<"MedicalRecord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MedicalRecord"> | Date | string
@@ -320,6 +335,7 @@ export type MedicalRecordCreateInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -329,6 +345,7 @@ export type MedicalRecordCreateInput = {
   doctor: Prisma.DoctorCreateNestedOneWithoutMedicalRecordsInput
   prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordUncheckedCreateInput = {
@@ -340,11 +357,13 @@ export type MedicalRecordUncheckedCreateInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
   prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderUncheckedCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignUncheckedCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordUpdateInput = {
@@ -352,6 +371,7 @@ export type MedicalRecordUpdateInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -361,6 +381,7 @@ export type MedicalRecordUpdateInput = {
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutMedicalRecordsNestedInput
   prescriptions?: Prisma.PrescriptionUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateInput = {
@@ -372,11 +393,13 @@ export type MedicalRecordUncheckedUpdateInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUncheckedUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUncheckedUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordCreateManyInput = {
@@ -388,6 +411,7 @@ export type MedicalRecordCreateManyInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -398,6 +422,7 @@ export type MedicalRecordUpdateManyMutationInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -412,6 +437,7 @@ export type MedicalRecordUncheckedUpdateManyInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -441,6 +467,7 @@ export type MedicalRecordCountOrderByAggregateInput = {
   diagnosis?: Prisma.SortOrder
   symptoms?: Prisma.SortOrder
   clinicalNotes?: Prisma.SortOrder
+  treatmentPlan?: Prisma.SortOrder
   status?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -455,6 +482,7 @@ export type MedicalRecordMaxOrderByAggregateInput = {
   diagnosis?: Prisma.SortOrder
   symptoms?: Prisma.SortOrder
   clinicalNotes?: Prisma.SortOrder
+  treatmentPlan?: Prisma.SortOrder
   status?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -469,6 +497,7 @@ export type MedicalRecordMinOrderByAggregateInput = {
   diagnosis?: Prisma.SortOrder
   symptoms?: Prisma.SortOrder
   clinicalNotes?: Prisma.SortOrder
+  treatmentPlan?: Prisma.SortOrder
   status?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -669,11 +698,26 @@ export type MedicalRecordUpdateOneRequiredWithoutLabOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MedicalRecordUpdateToOneWithWhereWithoutLabOrdersInput, Prisma.MedicalRecordUpdateWithoutLabOrdersInput>, Prisma.MedicalRecordUncheckedUpdateWithoutLabOrdersInput>
 }
 
+export type MedicalRecordCreateNestedOneWithoutVitalsInput = {
+  create?: Prisma.XOR<Prisma.MedicalRecordCreateWithoutVitalsInput, Prisma.MedicalRecordUncheckedCreateWithoutVitalsInput>
+  connectOrCreate?: Prisma.MedicalRecordCreateOrConnectWithoutVitalsInput
+  connect?: Prisma.MedicalRecordWhereUniqueInput
+}
+
+export type MedicalRecordUpdateOneRequiredWithoutVitalsNestedInput = {
+  create?: Prisma.XOR<Prisma.MedicalRecordCreateWithoutVitalsInput, Prisma.MedicalRecordUncheckedCreateWithoutVitalsInput>
+  connectOrCreate?: Prisma.MedicalRecordCreateOrConnectWithoutVitalsInput
+  upsert?: Prisma.MedicalRecordUpsertWithoutVitalsInput
+  connect?: Prisma.MedicalRecordWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MedicalRecordUpdateToOneWithWhereWithoutVitalsInput, Prisma.MedicalRecordUpdateWithoutVitalsInput>, Prisma.MedicalRecordUncheckedUpdateWithoutVitalsInput>
+}
+
 export type MedicalRecordCreateWithoutHospitalInput = {
   id?: string
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -682,6 +726,7 @@ export type MedicalRecordCreateWithoutHospitalInput = {
   doctor: Prisma.DoctorCreateNestedOneWithoutMedicalRecordsInput
   prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordUncheckedCreateWithoutHospitalInput = {
@@ -692,11 +737,13 @@ export type MedicalRecordUncheckedCreateWithoutHospitalInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
   prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderUncheckedCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignUncheckedCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordCreateOrConnectWithoutHospitalInput = {
@@ -737,6 +784,7 @@ export type MedicalRecordScalarWhereInput = {
   diagnosis?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   symptoms?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   clinicalNotes?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
+  treatmentPlan?: Prisma.StringNullableFilter<"MedicalRecord"> | string | null
   status?: Prisma.EnumRecordStatusFilter<"MedicalRecord"> | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFilter<"MedicalRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MedicalRecord"> | Date | string
@@ -747,6 +795,7 @@ export type MedicalRecordCreateWithoutDoctorInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -755,6 +804,7 @@ export type MedicalRecordCreateWithoutDoctorInput = {
   patient: Prisma.PatientCreateNestedOneWithoutMedicalRecordsInput
   prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordUncheckedCreateWithoutDoctorInput = {
@@ -765,11 +815,13 @@ export type MedicalRecordUncheckedCreateWithoutDoctorInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
   prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderUncheckedCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignUncheckedCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordCreateOrConnectWithoutDoctorInput = {
@@ -803,6 +855,7 @@ export type MedicalRecordCreateWithoutPatientInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -811,6 +864,7 @@ export type MedicalRecordCreateWithoutPatientInput = {
   doctor: Prisma.DoctorCreateNestedOneWithoutMedicalRecordsInput
   prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordUncheckedCreateWithoutPatientInput = {
@@ -821,11 +875,13 @@ export type MedicalRecordUncheckedCreateWithoutPatientInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
   prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderUncheckedCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignUncheckedCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordCreateOrConnectWithoutPatientInput = {
@@ -859,6 +915,7 @@ export type MedicalRecordCreateWithoutAppointmentInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -867,6 +924,7 @@ export type MedicalRecordCreateWithoutAppointmentInput = {
   doctor: Prisma.DoctorCreateNestedOneWithoutMedicalRecordsInput
   prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordUncheckedCreateWithoutAppointmentInput = {
@@ -877,11 +935,13 @@ export type MedicalRecordUncheckedCreateWithoutAppointmentInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
   prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutMedicalRecordInput
   labOrders?: Prisma.LabOrderUncheckedCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignUncheckedCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordCreateOrConnectWithoutAppointmentInput = {
@@ -905,6 +965,7 @@ export type MedicalRecordUpdateWithoutAppointmentInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -913,6 +974,7 @@ export type MedicalRecordUpdateWithoutAppointmentInput = {
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutMedicalRecordsNestedInput
   prescriptions?: Prisma.PrescriptionUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateWithoutAppointmentInput = {
@@ -923,11 +985,13 @@ export type MedicalRecordUncheckedUpdateWithoutAppointmentInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUncheckedUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUncheckedUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordCreateWithoutPrescriptionsInput = {
@@ -935,6 +999,7 @@ export type MedicalRecordCreateWithoutPrescriptionsInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -943,6 +1008,7 @@ export type MedicalRecordCreateWithoutPrescriptionsInput = {
   patient: Prisma.PatientCreateNestedOneWithoutMedicalRecordsInput
   doctor: Prisma.DoctorCreateNestedOneWithoutMedicalRecordsInput
   labOrders?: Prisma.LabOrderCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordUncheckedCreateWithoutPrescriptionsInput = {
@@ -954,10 +1020,12 @@ export type MedicalRecordUncheckedCreateWithoutPrescriptionsInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
   labOrders?: Prisma.LabOrderUncheckedCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignUncheckedCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordCreateOrConnectWithoutPrescriptionsInput = {
@@ -981,6 +1049,7 @@ export type MedicalRecordUpdateWithoutPrescriptionsInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -989,6 +1058,7 @@ export type MedicalRecordUpdateWithoutPrescriptionsInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutMedicalRecordsNestedInput
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutMedicalRecordsNestedInput
   labOrders?: Prisma.LabOrderUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateWithoutPrescriptionsInput = {
@@ -1000,10 +1070,12 @@ export type MedicalRecordUncheckedUpdateWithoutPrescriptionsInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   labOrders?: Prisma.LabOrderUncheckedUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUncheckedUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordCreateWithoutLabOrdersInput = {
@@ -1011,6 +1083,7 @@ export type MedicalRecordCreateWithoutLabOrdersInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -1019,6 +1092,7 @@ export type MedicalRecordCreateWithoutLabOrdersInput = {
   patient: Prisma.PatientCreateNestedOneWithoutMedicalRecordsInput
   doctor: Prisma.DoctorCreateNestedOneWithoutMedicalRecordsInput
   prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordUncheckedCreateWithoutLabOrdersInput = {
@@ -1030,10 +1104,12 @@ export type MedicalRecordUncheckedCreateWithoutLabOrdersInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
   prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutMedicalRecordInput
+  vitals?: Prisma.VitalSignUncheckedCreateNestedManyWithoutMedicalRecordInput
 }
 
 export type MedicalRecordCreateOrConnectWithoutLabOrdersInput = {
@@ -1057,6 +1133,7 @@ export type MedicalRecordUpdateWithoutLabOrdersInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1065,6 +1142,7 @@ export type MedicalRecordUpdateWithoutLabOrdersInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutMedicalRecordsNestedInput
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutMedicalRecordsNestedInput
   prescriptions?: Prisma.PrescriptionUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateWithoutLabOrdersInput = {
@@ -1076,10 +1154,96 @@ export type MedicalRecordUncheckedUpdateWithoutLabOrdersInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUncheckedUpdateManyWithoutMedicalRecordNestedInput
+}
+
+export type MedicalRecordCreateWithoutVitalsInput = {
+  id?: string
+  diagnosis?: string | null
+  symptoms?: string | null
+  clinicalNotes?: string | null
+  treatmentPlan?: string | null
+  status?: $Enums.RecordStatus
+  recordedAt?: Date | string
+  updatedAt?: Date | string
+  hospital: Prisma.HospitalCreateNestedOneWithoutMedicalRecordsInput
+  appointment: Prisma.AppointmentCreateNestedOneWithoutMedicalRecordInput
+  patient: Prisma.PatientCreateNestedOneWithoutMedicalRecordsInput
+  doctor: Prisma.DoctorCreateNestedOneWithoutMedicalRecordsInput
+  prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutMedicalRecordInput
+  labOrders?: Prisma.LabOrderCreateNestedManyWithoutMedicalRecordInput
+}
+
+export type MedicalRecordUncheckedCreateWithoutVitalsInput = {
+  id?: string
+  hospitalId: string
+  appointmentId: string
+  patientId: string
+  doctorId: string
+  diagnosis?: string | null
+  symptoms?: string | null
+  clinicalNotes?: string | null
+  treatmentPlan?: string | null
+  status?: $Enums.RecordStatus
+  recordedAt?: Date | string
+  updatedAt?: Date | string
+  prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutMedicalRecordInput
+  labOrders?: Prisma.LabOrderUncheckedCreateNestedManyWithoutMedicalRecordInput
+}
+
+export type MedicalRecordCreateOrConnectWithoutVitalsInput = {
+  where: Prisma.MedicalRecordWhereUniqueInput
+  create: Prisma.XOR<Prisma.MedicalRecordCreateWithoutVitalsInput, Prisma.MedicalRecordUncheckedCreateWithoutVitalsInput>
+}
+
+export type MedicalRecordUpsertWithoutVitalsInput = {
+  update: Prisma.XOR<Prisma.MedicalRecordUpdateWithoutVitalsInput, Prisma.MedicalRecordUncheckedUpdateWithoutVitalsInput>
+  create: Prisma.XOR<Prisma.MedicalRecordCreateWithoutVitalsInput, Prisma.MedicalRecordUncheckedCreateWithoutVitalsInput>
+  where?: Prisma.MedicalRecordWhereInput
+}
+
+export type MedicalRecordUpdateToOneWithWhereWithoutVitalsInput = {
+  where?: Prisma.MedicalRecordWhereInput
+  data: Prisma.XOR<Prisma.MedicalRecordUpdateWithoutVitalsInput, Prisma.MedicalRecordUncheckedUpdateWithoutVitalsInput>
+}
+
+export type MedicalRecordUpdateWithoutVitalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hospital?: Prisma.HospitalUpdateOneRequiredWithoutMedicalRecordsNestedInput
+  appointment?: Prisma.AppointmentUpdateOneRequiredWithoutMedicalRecordNestedInput
+  patient?: Prisma.PatientUpdateOneRequiredWithoutMedicalRecordsNestedInput
+  doctor?: Prisma.DoctorUpdateOneRequiredWithoutMedicalRecordsNestedInput
+  prescriptions?: Prisma.PrescriptionUpdateManyWithoutMedicalRecordNestedInput
+  labOrders?: Prisma.LabOrderUpdateManyWithoutMedicalRecordNestedInput
+}
+
+export type MedicalRecordUncheckedUpdateWithoutVitalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  hospitalId?: Prisma.StringFieldUpdateOperationsInput | string
+  appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  patientId?: Prisma.StringFieldUpdateOperationsInput | string
+  doctorId?: Prisma.StringFieldUpdateOperationsInput | string
+  diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutMedicalRecordNestedInput
+  labOrders?: Prisma.LabOrderUncheckedUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordCreateManyHospitalInput = {
@@ -1090,6 +1254,7 @@ export type MedicalRecordCreateManyHospitalInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -1100,6 +1265,7 @@ export type MedicalRecordUpdateWithoutHospitalInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1108,6 +1274,7 @@ export type MedicalRecordUpdateWithoutHospitalInput = {
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutMedicalRecordsNestedInput
   prescriptions?: Prisma.PrescriptionUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateWithoutHospitalInput = {
@@ -1118,11 +1285,13 @@ export type MedicalRecordUncheckedUpdateWithoutHospitalInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUncheckedUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUncheckedUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateManyWithoutHospitalInput = {
@@ -1133,6 +1302,7 @@ export type MedicalRecordUncheckedUpdateManyWithoutHospitalInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1146,6 +1316,7 @@ export type MedicalRecordCreateManyDoctorInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -1156,6 +1327,7 @@ export type MedicalRecordUpdateWithoutDoctorInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1164,6 +1336,7 @@ export type MedicalRecordUpdateWithoutDoctorInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutMedicalRecordsNestedInput
   prescriptions?: Prisma.PrescriptionUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateWithoutDoctorInput = {
@@ -1174,11 +1347,13 @@ export type MedicalRecordUncheckedUpdateWithoutDoctorInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUncheckedUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUncheckedUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateManyWithoutDoctorInput = {
@@ -1189,6 +1364,7 @@ export type MedicalRecordUncheckedUpdateManyWithoutDoctorInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1202,6 +1378,7 @@ export type MedicalRecordCreateManyPatientInput = {
   diagnosis?: string | null
   symptoms?: string | null
   clinicalNotes?: string | null
+  treatmentPlan?: string | null
   status?: $Enums.RecordStatus
   recordedAt?: Date | string
   updatedAt?: Date | string
@@ -1212,6 +1389,7 @@ export type MedicalRecordUpdateWithoutPatientInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1220,6 +1398,7 @@ export type MedicalRecordUpdateWithoutPatientInput = {
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutMedicalRecordsNestedInput
   prescriptions?: Prisma.PrescriptionUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateWithoutPatientInput = {
@@ -1230,11 +1409,13 @@ export type MedicalRecordUncheckedUpdateWithoutPatientInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutMedicalRecordNestedInput
   labOrders?: Prisma.LabOrderUncheckedUpdateManyWithoutMedicalRecordNestedInput
+  vitals?: Prisma.VitalSignUncheckedUpdateManyWithoutMedicalRecordNestedInput
 }
 
 export type MedicalRecordUncheckedUpdateManyWithoutPatientInput = {
@@ -1245,6 +1426,7 @@ export type MedicalRecordUncheckedUpdateManyWithoutPatientInput = {
   diagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   symptoms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clinicalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRecordStatusFieldUpdateOperationsInput | $Enums.RecordStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1258,11 +1440,13 @@ export type MedicalRecordUncheckedUpdateManyWithoutPatientInput = {
 export type MedicalRecordCountOutputType = {
   prescriptions: number
   labOrders: number
+  vitals: number
 }
 
 export type MedicalRecordCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prescriptions?: boolean | MedicalRecordCountOutputTypeCountPrescriptionsArgs
   labOrders?: boolean | MedicalRecordCountOutputTypeCountLabOrdersArgs
+  vitals?: boolean | MedicalRecordCountOutputTypeCountVitalsArgs
 }
 
 /**
@@ -1289,6 +1473,13 @@ export type MedicalRecordCountOutputTypeCountLabOrdersArgs<ExtArgs extends runti
   where?: Prisma.LabOrderWhereInput
 }
 
+/**
+ * MedicalRecordCountOutputType without action
+ */
+export type MedicalRecordCountOutputTypeCountVitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VitalSignWhereInput
+}
+
 
 export type MedicalRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1299,6 +1490,7 @@ export type MedicalRecordSelect<ExtArgs extends runtime.Types.Extensions.Interna
   diagnosis?: boolean
   symptoms?: boolean
   clinicalNotes?: boolean
+  treatmentPlan?: boolean
   status?: boolean
   recordedAt?: boolean
   updatedAt?: boolean
@@ -1308,6 +1500,7 @@ export type MedicalRecordSelect<ExtArgs extends runtime.Types.Extensions.Interna
   doctor?: boolean | Prisma.DoctorDefaultArgs<ExtArgs>
   prescriptions?: boolean | Prisma.MedicalRecord$prescriptionsArgs<ExtArgs>
   labOrders?: boolean | Prisma.MedicalRecord$labOrdersArgs<ExtArgs>
+  vitals?: boolean | Prisma.MedicalRecord$vitalsArgs<ExtArgs>
   _count?: boolean | Prisma.MedicalRecordCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["medicalRecord"]>
 
@@ -1320,6 +1513,7 @@ export type MedicalRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   diagnosis?: boolean
   symptoms?: boolean
   clinicalNotes?: boolean
+  treatmentPlan?: boolean
   status?: boolean
   recordedAt?: boolean
   updatedAt?: boolean
@@ -1338,6 +1532,7 @@ export type MedicalRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   diagnosis?: boolean
   symptoms?: boolean
   clinicalNotes?: boolean
+  treatmentPlan?: boolean
   status?: boolean
   recordedAt?: boolean
   updatedAt?: boolean
@@ -1356,12 +1551,13 @@ export type MedicalRecordSelectScalar = {
   diagnosis?: boolean
   symptoms?: boolean
   clinicalNotes?: boolean
+  treatmentPlan?: boolean
   status?: boolean
   recordedAt?: boolean
   updatedAt?: boolean
 }
 
-export type MedicalRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hospitalId" | "appointmentId" | "patientId" | "doctorId" | "diagnosis" | "symptoms" | "clinicalNotes" | "status" | "recordedAt" | "updatedAt", ExtArgs["result"]["medicalRecord"]>
+export type MedicalRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hospitalId" | "appointmentId" | "patientId" | "doctorId" | "diagnosis" | "symptoms" | "clinicalNotes" | "treatmentPlan" | "status" | "recordedAt" | "updatedAt", ExtArgs["result"]["medicalRecord"]>
 export type MedicalRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hospital?: boolean | Prisma.HospitalDefaultArgs<ExtArgs>
   appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
@@ -1369,6 +1565,7 @@ export type MedicalRecordInclude<ExtArgs extends runtime.Types.Extensions.Intern
   doctor?: boolean | Prisma.DoctorDefaultArgs<ExtArgs>
   prescriptions?: boolean | Prisma.MedicalRecord$prescriptionsArgs<ExtArgs>
   labOrders?: boolean | Prisma.MedicalRecord$labOrdersArgs<ExtArgs>
+  vitals?: boolean | Prisma.MedicalRecord$vitalsArgs<ExtArgs>
   _count?: boolean | Prisma.MedicalRecordCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MedicalRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1393,6 +1590,7 @@ export type $MedicalRecordPayload<ExtArgs extends runtime.Types.Extensions.Inter
     doctor: Prisma.$DoctorPayload<ExtArgs>
     prescriptions: Prisma.$PrescriptionPayload<ExtArgs>[]
     labOrders: Prisma.$LabOrderPayload<ExtArgs>[]
+    vitals: Prisma.$VitalSignPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1403,6 +1601,7 @@ export type $MedicalRecordPayload<ExtArgs extends runtime.Types.Extensions.Inter
     diagnosis: string | null
     symptoms: string | null
     clinicalNotes: string | null
+    treatmentPlan: string | null
     status: $Enums.RecordStatus
     recordedAt: Date
     updatedAt: Date
@@ -1806,6 +2005,7 @@ export interface Prisma__MedicalRecordClient<T, Null = never, ExtArgs extends ru
   doctor<T extends Prisma.DoctorDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorDefaultArgs<ExtArgs>>): Prisma.Prisma__DoctorClient<runtime.Types.Result.GetResult<Prisma.$DoctorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   prescriptions<T extends Prisma.MedicalRecord$prescriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MedicalRecord$prescriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrescriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   labOrders<T extends Prisma.MedicalRecord$labOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MedicalRecord$labOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LabOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  vitals<T extends Prisma.MedicalRecord$vitalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MedicalRecord$vitalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VitalSignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1843,6 +2043,7 @@ export interface MedicalRecordFieldRefs {
   readonly diagnosis: Prisma.FieldRef<"MedicalRecord", 'String'>
   readonly symptoms: Prisma.FieldRef<"MedicalRecord", 'String'>
   readonly clinicalNotes: Prisma.FieldRef<"MedicalRecord", 'String'>
+  readonly treatmentPlan: Prisma.FieldRef<"MedicalRecord", 'String'>
   readonly status: Prisma.FieldRef<"MedicalRecord", 'RecordStatus'>
   readonly recordedAt: Prisma.FieldRef<"MedicalRecord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MedicalRecord", 'DateTime'>
@@ -2292,6 +2493,30 @@ export type MedicalRecord$labOrdersArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.LabOrderScalarFieldEnum | Prisma.LabOrderScalarFieldEnum[]
+}
+
+/**
+ * MedicalRecord.vitals
+ */
+export type MedicalRecord$vitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VitalSign
+   */
+  select?: Prisma.VitalSignSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VitalSign
+   */
+  omit?: Prisma.VitalSignOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VitalSignInclude<ExtArgs> | null
+  where?: Prisma.VitalSignWhereInput
+  orderBy?: Prisma.VitalSignOrderByWithRelationInput | Prisma.VitalSignOrderByWithRelationInput[]
+  cursor?: Prisma.VitalSignWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VitalSignScalarFieldEnum | Prisma.VitalSignScalarFieldEnum[]
 }
 
 /**
