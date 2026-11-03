@@ -117,6 +117,11 @@ export type Invoice = Prisma.InvoiceModel
  */
 export type InvoiceItem = Prisma.InvoiceItemModel
 /**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
  * Model Notification
  * 
  */
@@ -151,3 +156,23 @@ export type VitalSign = Prisma.VitalSignModel
  * 
  */
 export type PatientAllergy = Prisma.PatientAllergyModel
+/**
+ * Model MedicineBatch
+ * 
+ */
+export type MedicineBatch = Prisma.MedicineBatchModel
+/**
+ * Model PharmacyDispense
+ * 
+ */
+export type PharmacyDispense = Prisma.PharmacyDispenseModel
+/**
+ * Model PharmacyDispenseItem
+ * 
+ */
+export type PharmacyDispenseItem = Prisma.PharmacyDispenseItemModel
+/**
+ * Model PharmacyBatchAllocation
+ * 
+ */
+export type PharmacyBatchAllocation = Prisma.PharmacyBatchAllocationModel

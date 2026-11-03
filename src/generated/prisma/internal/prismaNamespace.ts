@@ -412,13 +412,18 @@ export const ModelName = {
   LabOrder: 'LabOrder',
   Invoice: 'Invoice',
   InvoiceItem: 'InvoiceItem',
+  Payment: 'Payment',
   Notification: 'Notification',
   AuditLog: 'AuditLog',
   RefreshToken: 'RefreshToken',
   EmailOtp: 'EmailOtp',
   DoctorAvailability: 'DoctorAvailability',
   VitalSign: 'VitalSign',
-  PatientAllergy: 'PatientAllergy'
+  PatientAllergy: 'PatientAllergy',
+  MedicineBatch: 'MedicineBatch',
+  PharmacyDispense: 'PharmacyDispense',
+  PharmacyDispenseItem: 'PharmacyDispenseItem',
+  PharmacyBatchAllocation: 'PharmacyBatchAllocation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -434,7 +439,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hospital" | "user" | "department" | "doctor" | "patient" | "room" | "appointment" | "medicalRecord" | "prescription" | "medicine" | "prescriptionItem" | "labTest" | "labOrder" | "invoice" | "invoiceItem" | "notification" | "auditLog" | "refreshToken" | "emailOtp" | "doctorAvailability" | "vitalSign" | "patientAllergy"
+    modelProps: "hospital" | "user" | "department" | "doctor" | "patient" | "room" | "appointment" | "medicalRecord" | "prescription" | "medicine" | "prescriptionItem" | "labTest" | "labOrder" | "invoice" | "invoiceItem" | "payment" | "notification" | "auditLog" | "refreshToken" | "emailOtp" | "doctorAvailability" | "vitalSign" | "patientAllergy" | "medicineBatch" | "pharmacyDispense" | "pharmacyDispenseItem" | "pharmacyBatchAllocation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1548,6 +1553,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Payment: {
+      payload: Prisma.$PaymentPayload<ExtArgs>
+      fields: Prisma.PaymentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        update: {
+          args: Prisma.PaymentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePayment>
+        }
+        groupBy: {
+          args: Prisma.PaymentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentCountAggregateOutputType> | number
+        }
+      }
+    }
     Notification: {
       payload: Prisma.$NotificationPayload<ExtArgs>
       fields: Prisma.NotificationFieldRefs
@@ -2066,6 +2145,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MedicineBatch: {
+      payload: Prisma.$MedicineBatchPayload<ExtArgs>
+      fields: Prisma.MedicineBatchFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MedicineBatchFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MedicineBatchFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>
+        }
+        findFirst: {
+          args: Prisma.MedicineBatchFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MedicineBatchFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>
+        }
+        findMany: {
+          args: Prisma.MedicineBatchFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>[]
+        }
+        create: {
+          args: Prisma.MedicineBatchCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>
+        }
+        createMany: {
+          args: Prisma.MedicineBatchCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MedicineBatchCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>[]
+        }
+        delete: {
+          args: Prisma.MedicineBatchDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>
+        }
+        update: {
+          args: Prisma.MedicineBatchUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>
+        }
+        deleteMany: {
+          args: Prisma.MedicineBatchDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MedicineBatchUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MedicineBatchUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>[]
+        }
+        upsert: {
+          args: Prisma.MedicineBatchUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicineBatchPayload>
+        }
+        aggregate: {
+          args: Prisma.MedicineBatchAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMedicineBatch>
+        }
+        groupBy: {
+          args: Prisma.MedicineBatchGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MedicineBatchGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MedicineBatchCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MedicineBatchCountAggregateOutputType> | number
+        }
+      }
+    }
+    PharmacyDispense: {
+      payload: Prisma.$PharmacyDispensePayload<ExtArgs>
+      fields: Prisma.PharmacyDispenseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PharmacyDispenseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PharmacyDispenseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>
+        }
+        findFirst: {
+          args: Prisma.PharmacyDispenseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PharmacyDispenseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>
+        }
+        findMany: {
+          args: Prisma.PharmacyDispenseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>[]
+        }
+        create: {
+          args: Prisma.PharmacyDispenseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>
+        }
+        createMany: {
+          args: Prisma.PharmacyDispenseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PharmacyDispenseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>[]
+        }
+        delete: {
+          args: Prisma.PharmacyDispenseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>
+        }
+        update: {
+          args: Prisma.PharmacyDispenseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>
+        }
+        deleteMany: {
+          args: Prisma.PharmacyDispenseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PharmacyDispenseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PharmacyDispenseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>[]
+        }
+        upsert: {
+          args: Prisma.PharmacyDispenseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispensePayload>
+        }
+        aggregate: {
+          args: Prisma.PharmacyDispenseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePharmacyDispense>
+        }
+        groupBy: {
+          args: Prisma.PharmacyDispenseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PharmacyDispenseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PharmacyDispenseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PharmacyDispenseCountAggregateOutputType> | number
+        }
+      }
+    }
+    PharmacyDispenseItem: {
+      payload: Prisma.$PharmacyDispenseItemPayload<ExtArgs>
+      fields: Prisma.PharmacyDispenseItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PharmacyDispenseItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PharmacyDispenseItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>
+        }
+        findFirst: {
+          args: Prisma.PharmacyDispenseItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PharmacyDispenseItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>
+        }
+        findMany: {
+          args: Prisma.PharmacyDispenseItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>[]
+        }
+        create: {
+          args: Prisma.PharmacyDispenseItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>
+        }
+        createMany: {
+          args: Prisma.PharmacyDispenseItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PharmacyDispenseItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>[]
+        }
+        delete: {
+          args: Prisma.PharmacyDispenseItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>
+        }
+        update: {
+          args: Prisma.PharmacyDispenseItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.PharmacyDispenseItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PharmacyDispenseItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PharmacyDispenseItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.PharmacyDispenseItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyDispenseItemPayload>
+        }
+        aggregate: {
+          args: Prisma.PharmacyDispenseItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePharmacyDispenseItem>
+        }
+        groupBy: {
+          args: Prisma.PharmacyDispenseItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PharmacyDispenseItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PharmacyDispenseItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PharmacyDispenseItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    PharmacyBatchAllocation: {
+      payload: Prisma.$PharmacyBatchAllocationPayload<ExtArgs>
+      fields: Prisma.PharmacyBatchAllocationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PharmacyBatchAllocationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PharmacyBatchAllocationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>
+        }
+        findFirst: {
+          args: Prisma.PharmacyBatchAllocationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PharmacyBatchAllocationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>
+        }
+        findMany: {
+          args: Prisma.PharmacyBatchAllocationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>[]
+        }
+        create: {
+          args: Prisma.PharmacyBatchAllocationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>
+        }
+        createMany: {
+          args: Prisma.PharmacyBatchAllocationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PharmacyBatchAllocationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>[]
+        }
+        delete: {
+          args: Prisma.PharmacyBatchAllocationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>
+        }
+        update: {
+          args: Prisma.PharmacyBatchAllocationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>
+        }
+        deleteMany: {
+          args: Prisma.PharmacyBatchAllocationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PharmacyBatchAllocationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PharmacyBatchAllocationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>[]
+        }
+        upsert: {
+          args: Prisma.PharmacyBatchAllocationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PharmacyBatchAllocationPayload>
+        }
+        aggregate: {
+          args: Prisma.PharmacyBatchAllocationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePharmacyBatchAllocation>
+        }
+        groupBy: {
+          args: Prisma.PharmacyBatchAllocationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PharmacyBatchAllocationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PharmacyBatchAllocationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PharmacyBatchAllocationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2311,7 +2686,12 @@ export const LabOrderScalarFieldEnum = {
   resultFileUrl: 'resultFileUrl',
   orderedAt: 'orderedAt',
   completedAt: 'completedAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  resultUploadedByUserId: 'resultUploadedByUserId',
+  approvedByUserId: 'approvedByUserId',
+  approvedAt: 'approvedAt',
+  approvalNotes: 'approvalNotes',
+  notes: 'notes'
 } as const
 
 export type LabOrderScalarFieldEnum = (typeof LabOrderScalarFieldEnum)[keyof typeof LabOrderScalarFieldEnum]
@@ -2349,6 +2729,30 @@ export const InvoiceItemScalarFieldEnum = {
 } as const
 
 export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  recordedById: 'recordedById',
+  amount: 'amount',
+  refundAmount: 'refundAmount',
+  currency: 'currency',
+  method: 'method',
+  provider: 'provider',
+  status: 'status',
+  providerOrderId: 'providerOrderId',
+  providerPaymentId: 'providerPaymentId',
+  referenceNumber: 'referenceNumber',
+  idempotencyKey: 'idempotencyKey',
+  failureReason: 'failureReason',
+  notes: 'notes',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
@@ -2457,6 +2861,58 @@ export const PatientAllergyScalarFieldEnum = {
 } as const
 
 export type PatientAllergyScalarFieldEnum = (typeof PatientAllergyScalarFieldEnum)[keyof typeof PatientAllergyScalarFieldEnum]
+
+
+export const MedicineBatchScalarFieldEnum = {
+  id: 'id',
+  medicineId: 'medicineId',
+  batchNumber: 'batchNumber',
+  expiryDate: 'expiryDate',
+  quantityReceived: 'quantityReceived',
+  quantityAvailable: 'quantityAvailable',
+  purchasePrice: 'purchasePrice',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MedicineBatchScalarFieldEnum = (typeof MedicineBatchScalarFieldEnum)[keyof typeof MedicineBatchScalarFieldEnum]
+
+
+export const PharmacyDispenseScalarFieldEnum = {
+  id: 'id',
+  prescriptionId: 'prescriptionId',
+  dispensedByUserId: 'dispensedByUserId',
+  dispensedAt: 'dispensedAt',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type PharmacyDispenseScalarFieldEnum = (typeof PharmacyDispenseScalarFieldEnum)[keyof typeof PharmacyDispenseScalarFieldEnum]
+
+
+export const PharmacyDispenseItemScalarFieldEnum = {
+  id: 'id',
+  dispenseId: 'dispenseId',
+  prescriptionItemId: 'prescriptionItemId',
+  medicineId: 'medicineId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  createdAt: 'createdAt'
+} as const
+
+export type PharmacyDispenseItemScalarFieldEnum = (typeof PharmacyDispenseItemScalarFieldEnum)[keyof typeof PharmacyDispenseItemScalarFieldEnum]
+
+
+export const PharmacyBatchAllocationScalarFieldEnum = {
+  id: 'id',
+  dispenseItemId: 'dispenseItemId',
+  batchId: 'batchId',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type PharmacyBatchAllocationScalarFieldEnum = (typeof PharmacyBatchAllocationScalarFieldEnum)[keyof typeof PharmacyBatchAllocationScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2696,6 +3152,48 @@ export type ListEnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'PaymentMethod'
+ */
+export type EnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentMethod[]'
+ */
+export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentProvider'
+ */
+export type EnumPaymentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentProvider'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentProvider[]'
+ */
+export type ListEnumPaymentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentProvider[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentStatus'
+ */
+export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentStatus[]'
+ */
+export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -2930,6 +3428,7 @@ export type GlobalOmitConfig = {
   labOrder?: Prisma.LabOrderOmit
   invoice?: Prisma.InvoiceOmit
   invoiceItem?: Prisma.InvoiceItemOmit
+  payment?: Prisma.PaymentOmit
   notification?: Prisma.NotificationOmit
   auditLog?: Prisma.AuditLogOmit
   refreshToken?: Prisma.RefreshTokenOmit
@@ -2937,6 +3436,10 @@ export type GlobalOmitConfig = {
   doctorAvailability?: Prisma.DoctorAvailabilityOmit
   vitalSign?: Prisma.VitalSignOmit
   patientAllergy?: Prisma.PatientAllergyOmit
+  medicineBatch?: Prisma.MedicineBatchOmit
+  pharmacyDispense?: Prisma.PharmacyDispenseOmit
+  pharmacyDispenseItem?: Prisma.PharmacyDispenseItemOmit
+  pharmacyBatchAllocation?: Prisma.PharmacyBatchAllocationOmit
 }
 
 /* Types for Logging */

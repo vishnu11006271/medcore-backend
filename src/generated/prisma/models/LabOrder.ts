@@ -35,6 +35,11 @@ export type LabOrderMinAggregateOutputType = {
   orderedAt: Date | null
   completedAt: Date | null
   updatedAt: Date | null
+  resultUploadedByUserId: string | null
+  approvedByUserId: string | null
+  approvedAt: Date | null
+  approvalNotes: string | null
+  notes: string | null
 }
 
 export type LabOrderMaxAggregateOutputType = {
@@ -48,6 +53,11 @@ export type LabOrderMaxAggregateOutputType = {
   orderedAt: Date | null
   completedAt: Date | null
   updatedAt: Date | null
+  resultUploadedByUserId: string | null
+  approvedByUserId: string | null
+  approvedAt: Date | null
+  approvalNotes: string | null
+  notes: string | null
 }
 
 export type LabOrderCountAggregateOutputType = {
@@ -61,6 +71,11 @@ export type LabOrderCountAggregateOutputType = {
   orderedAt: number
   completedAt: number
   updatedAt: number
+  resultUploadedByUserId: number
+  approvedByUserId: number
+  approvedAt: number
+  approvalNotes: number
+  notes: number
   _all: number
 }
 
@@ -76,6 +91,11 @@ export type LabOrderMinAggregateInputType = {
   orderedAt?: true
   completedAt?: true
   updatedAt?: true
+  resultUploadedByUserId?: true
+  approvedByUserId?: true
+  approvedAt?: true
+  approvalNotes?: true
+  notes?: true
 }
 
 export type LabOrderMaxAggregateInputType = {
@@ -89,6 +109,11 @@ export type LabOrderMaxAggregateInputType = {
   orderedAt?: true
   completedAt?: true
   updatedAt?: true
+  resultUploadedByUserId?: true
+  approvedByUserId?: true
+  approvedAt?: true
+  approvalNotes?: true
+  notes?: true
 }
 
 export type LabOrderCountAggregateInputType = {
@@ -102,6 +127,11 @@ export type LabOrderCountAggregateInputType = {
   orderedAt?: true
   completedAt?: true
   updatedAt?: true
+  resultUploadedByUserId?: true
+  approvedByUserId?: true
+  approvedAt?: true
+  approvalNotes?: true
+  notes?: true
   _all?: true
 }
 
@@ -188,6 +218,11 @@ export type LabOrderGroupByOutputType = {
   orderedAt: Date
   completedAt: Date | null
   updatedAt: Date
+  resultUploadedByUserId: string | null
+  approvedByUserId: string | null
+  approvedAt: Date | null
+  approvalNotes: string | null
+  notes: string | null
   _count: LabOrderCountAggregateOutputType | null
   _min: LabOrderMinAggregateOutputType | null
   _max: LabOrderMaxAggregateOutputType | null
@@ -222,6 +257,11 @@ export type LabOrderWhereInput = {
   orderedAt?: Prisma.DateTimeFilter<"LabOrder"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"LabOrder"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"LabOrder"> | Date | string
+  resultUploadedByUserId?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  approvedByUserId?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"LabOrder"> | Date | string | null
+  approvalNotes?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  notes?: Prisma.StringNullableFilter<"LabOrder"> | string | null
   medicalRecord?: Prisma.XOR<Prisma.MedicalRecordScalarRelationFilter, Prisma.MedicalRecordWhereInput>
   labTest?: Prisma.XOR<Prisma.LabTestScalarRelationFilter, Prisma.LabTestWhereInput>
   orderedBy?: Prisma.XOR<Prisma.DoctorNullableScalarRelationFilter, Prisma.DoctorWhereInput> | null
@@ -238,6 +278,11 @@ export type LabOrderOrderByWithRelationInput = {
   orderedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  resultUploadedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvalNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   medicalRecord?: Prisma.MedicalRecordOrderByWithRelationInput
   labTest?: Prisma.LabTestOrderByWithRelationInput
   orderedBy?: Prisma.DoctorOrderByWithRelationInput
@@ -257,6 +302,11 @@ export type LabOrderWhereUniqueInput = Prisma.AtLeast<{
   orderedAt?: Prisma.DateTimeFilter<"LabOrder"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"LabOrder"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"LabOrder"> | Date | string
+  resultUploadedByUserId?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  approvedByUserId?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"LabOrder"> | Date | string | null
+  approvalNotes?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  notes?: Prisma.StringNullableFilter<"LabOrder"> | string | null
   medicalRecord?: Prisma.XOR<Prisma.MedicalRecordScalarRelationFilter, Prisma.MedicalRecordWhereInput>
   labTest?: Prisma.XOR<Prisma.LabTestScalarRelationFilter, Prisma.LabTestWhereInput>
   orderedBy?: Prisma.XOR<Prisma.DoctorNullableScalarRelationFilter, Prisma.DoctorWhereInput> | null
@@ -273,6 +323,11 @@ export type LabOrderOrderByWithAggregationInput = {
   orderedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  resultUploadedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvalNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LabOrderCountOrderByAggregateInput
   _max?: Prisma.LabOrderMaxOrderByAggregateInput
   _min?: Prisma.LabOrderMinOrderByAggregateInput
@@ -292,6 +347,11 @@ export type LabOrderScalarWhereWithAggregatesInput = {
   orderedAt?: Prisma.DateTimeWithAggregatesFilter<"LabOrder"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LabOrder"> | Date | string | null
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LabOrder"> | Date | string
+  resultUploadedByUserId?: Prisma.StringNullableWithAggregatesFilter<"LabOrder"> | string | null
+  approvedByUserId?: Prisma.StringNullableWithAggregatesFilter<"LabOrder"> | string | null
+  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LabOrder"> | Date | string | null
+  approvalNotes?: Prisma.StringNullableWithAggregatesFilter<"LabOrder"> | string | null
+  notes?: Prisma.StringNullableWithAggregatesFilter<"LabOrder"> | string | null
 }
 
 export type LabOrderCreateInput = {
@@ -302,6 +362,11 @@ export type LabOrderCreateInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
   medicalRecord: Prisma.MedicalRecordCreateNestedOneWithoutLabOrdersInput
   labTest: Prisma.LabTestCreateNestedOneWithoutLabOrdersInput
   orderedBy?: Prisma.DoctorCreateNestedOneWithoutLabOrdersInput
@@ -318,6 +383,11 @@ export type LabOrderUncheckedCreateInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
 }
 
 export type LabOrderUpdateInput = {
@@ -328,6 +398,11 @@ export type LabOrderUpdateInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   medicalRecord?: Prisma.MedicalRecordUpdateOneRequiredWithoutLabOrdersNestedInput
   labTest?: Prisma.LabTestUpdateOneRequiredWithoutLabOrdersNestedInput
   orderedBy?: Prisma.DoctorUpdateOneWithoutLabOrdersNestedInput
@@ -344,6 +419,11 @@ export type LabOrderUncheckedUpdateInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LabOrderCreateManyInput = {
@@ -357,6 +437,11 @@ export type LabOrderCreateManyInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
 }
 
 export type LabOrderUpdateManyMutationInput = {
@@ -367,6 +452,11 @@ export type LabOrderUpdateManyMutationInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LabOrderUncheckedUpdateManyInput = {
@@ -380,6 +470,11 @@ export type LabOrderUncheckedUpdateManyInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LabOrderListRelationFilter = {
@@ -403,6 +498,11 @@ export type LabOrderCountOrderByAggregateInput = {
   orderedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  resultUploadedByUserId?: Prisma.SortOrder
+  approvedByUserId?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  approvalNotes?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
 }
 
 export type LabOrderMaxOrderByAggregateInput = {
@@ -416,6 +516,11 @@ export type LabOrderMaxOrderByAggregateInput = {
   orderedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  resultUploadedByUserId?: Prisma.SortOrder
+  approvedByUserId?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  approvalNotes?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
 }
 
 export type LabOrderMinOrderByAggregateInput = {
@@ -429,6 +534,11 @@ export type LabOrderMinOrderByAggregateInput = {
   orderedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  resultUploadedByUserId?: Prisma.SortOrder
+  approvedByUserId?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  approvalNotes?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
 }
 
 export type LabOrderCreateNestedManyWithoutOrderedByInput = {
@@ -569,6 +679,11 @@ export type LabOrderCreateWithoutOrderedByInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
   medicalRecord: Prisma.MedicalRecordCreateNestedOneWithoutLabOrdersInput
   labTest: Prisma.LabTestCreateNestedOneWithoutLabOrdersInput
 }
@@ -583,6 +698,11 @@ export type LabOrderUncheckedCreateWithoutOrderedByInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
 }
 
 export type LabOrderCreateOrConnectWithoutOrderedByInput = {
@@ -625,6 +745,11 @@ export type LabOrderScalarWhereInput = {
   orderedAt?: Prisma.DateTimeFilter<"LabOrder"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"LabOrder"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"LabOrder"> | Date | string
+  resultUploadedByUserId?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  approvedByUserId?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"LabOrder"> | Date | string | null
+  approvalNotes?: Prisma.StringNullableFilter<"LabOrder"> | string | null
+  notes?: Prisma.StringNullableFilter<"LabOrder"> | string | null
 }
 
 export type LabOrderCreateWithoutMedicalRecordInput = {
@@ -635,6 +760,11 @@ export type LabOrderCreateWithoutMedicalRecordInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
   labTest: Prisma.LabTestCreateNestedOneWithoutLabOrdersInput
   orderedBy?: Prisma.DoctorCreateNestedOneWithoutLabOrdersInput
 }
@@ -649,6 +779,11 @@ export type LabOrderUncheckedCreateWithoutMedicalRecordInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
 }
 
 export type LabOrderCreateOrConnectWithoutMedicalRecordInput = {
@@ -685,6 +820,11 @@ export type LabOrderCreateWithoutLabTestInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
   medicalRecord: Prisma.MedicalRecordCreateNestedOneWithoutLabOrdersInput
   orderedBy?: Prisma.DoctorCreateNestedOneWithoutLabOrdersInput
 }
@@ -699,6 +839,11 @@ export type LabOrderUncheckedCreateWithoutLabTestInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
 }
 
 export type LabOrderCreateOrConnectWithoutLabTestInput = {
@@ -737,6 +882,11 @@ export type LabOrderCreateManyOrderedByInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
 }
 
 export type LabOrderUpdateWithoutOrderedByInput = {
@@ -747,6 +897,11 @@ export type LabOrderUpdateWithoutOrderedByInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   medicalRecord?: Prisma.MedicalRecordUpdateOneRequiredWithoutLabOrdersNestedInput
   labTest?: Prisma.LabTestUpdateOneRequiredWithoutLabOrdersNestedInput
 }
@@ -761,6 +916,11 @@ export type LabOrderUncheckedUpdateWithoutOrderedByInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LabOrderUncheckedUpdateManyWithoutOrderedByInput = {
@@ -773,6 +933,11 @@ export type LabOrderUncheckedUpdateManyWithoutOrderedByInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LabOrderCreateManyMedicalRecordInput = {
@@ -785,6 +950,11 @@ export type LabOrderCreateManyMedicalRecordInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
 }
 
 export type LabOrderUpdateWithoutMedicalRecordInput = {
@@ -795,6 +965,11 @@ export type LabOrderUpdateWithoutMedicalRecordInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   labTest?: Prisma.LabTestUpdateOneRequiredWithoutLabOrdersNestedInput
   orderedBy?: Prisma.DoctorUpdateOneWithoutLabOrdersNestedInput
 }
@@ -809,6 +984,11 @@ export type LabOrderUncheckedUpdateWithoutMedicalRecordInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LabOrderUncheckedUpdateManyWithoutMedicalRecordInput = {
@@ -821,6 +1001,11 @@ export type LabOrderUncheckedUpdateManyWithoutMedicalRecordInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LabOrderCreateManyLabTestInput = {
@@ -833,6 +1018,11 @@ export type LabOrderCreateManyLabTestInput = {
   orderedAt?: Date | string
   completedAt?: Date | string | null
   updatedAt?: Date | string
+  resultUploadedByUserId?: string | null
+  approvedByUserId?: string | null
+  approvedAt?: Date | string | null
+  approvalNotes?: string | null
+  notes?: string | null
 }
 
 export type LabOrderUpdateWithoutLabTestInput = {
@@ -843,6 +1033,11 @@ export type LabOrderUpdateWithoutLabTestInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   medicalRecord?: Prisma.MedicalRecordUpdateOneRequiredWithoutLabOrdersNestedInput
   orderedBy?: Prisma.DoctorUpdateOneWithoutLabOrdersNestedInput
 }
@@ -857,6 +1052,11 @@ export type LabOrderUncheckedUpdateWithoutLabTestInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LabOrderUncheckedUpdateManyWithoutLabTestInput = {
@@ -869,6 +1069,11 @@ export type LabOrderUncheckedUpdateManyWithoutLabTestInput = {
   orderedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resultUploadedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -884,6 +1089,11 @@ export type LabOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   orderedAt?: boolean
   completedAt?: boolean
   updatedAt?: boolean
+  resultUploadedByUserId?: boolean
+  approvedByUserId?: boolean
+  approvedAt?: boolean
+  approvalNotes?: boolean
+  notes?: boolean
   medicalRecord?: boolean | Prisma.MedicalRecordDefaultArgs<ExtArgs>
   labTest?: boolean | Prisma.LabTestDefaultArgs<ExtArgs>
   orderedBy?: boolean | Prisma.LabOrder$orderedByArgs<ExtArgs>
@@ -900,6 +1110,11 @@ export type LabOrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   orderedAt?: boolean
   completedAt?: boolean
   updatedAt?: boolean
+  resultUploadedByUserId?: boolean
+  approvedByUserId?: boolean
+  approvedAt?: boolean
+  approvalNotes?: boolean
+  notes?: boolean
   medicalRecord?: boolean | Prisma.MedicalRecordDefaultArgs<ExtArgs>
   labTest?: boolean | Prisma.LabTestDefaultArgs<ExtArgs>
   orderedBy?: boolean | Prisma.LabOrder$orderedByArgs<ExtArgs>
@@ -916,6 +1131,11 @@ export type LabOrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   orderedAt?: boolean
   completedAt?: boolean
   updatedAt?: boolean
+  resultUploadedByUserId?: boolean
+  approvedByUserId?: boolean
+  approvedAt?: boolean
+  approvalNotes?: boolean
+  notes?: boolean
   medicalRecord?: boolean | Prisma.MedicalRecordDefaultArgs<ExtArgs>
   labTest?: boolean | Prisma.LabTestDefaultArgs<ExtArgs>
   orderedBy?: boolean | Prisma.LabOrder$orderedByArgs<ExtArgs>
@@ -932,9 +1152,14 @@ export type LabOrderSelectScalar = {
   orderedAt?: boolean
   completedAt?: boolean
   updatedAt?: boolean
+  resultUploadedByUserId?: boolean
+  approvedByUserId?: boolean
+  approvedAt?: boolean
+  approvalNotes?: boolean
+  notes?: boolean
 }
 
-export type LabOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "medicalRecordId" | "labTestId" | "orderedById" | "status" | "resultText" | "resultFileUrl" | "orderedAt" | "completedAt" | "updatedAt", ExtArgs["result"]["labOrder"]>
+export type LabOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "medicalRecordId" | "labTestId" | "orderedById" | "status" | "resultText" | "resultFileUrl" | "orderedAt" | "completedAt" | "updatedAt" | "resultUploadedByUserId" | "approvedByUserId" | "approvedAt" | "approvalNotes" | "notes", ExtArgs["result"]["labOrder"]>
 export type LabOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   medicalRecord?: boolean | Prisma.MedicalRecordDefaultArgs<ExtArgs>
   labTest?: boolean | Prisma.LabTestDefaultArgs<ExtArgs>
@@ -969,6 +1194,11 @@ export type $LabOrderPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     orderedAt: Date
     completedAt: Date | null
     updatedAt: Date
+    resultUploadedByUserId: string | null
+    approvedByUserId: string | null
+    approvedAt: Date | null
+    approvalNotes: string | null
+    notes: string | null
   }, ExtArgs["result"]["labOrder"]>
   composites: {}
 }
@@ -1405,6 +1635,11 @@ export interface LabOrderFieldRefs {
   readonly orderedAt: Prisma.FieldRef<"LabOrder", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"LabOrder", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LabOrder", 'DateTime'>
+  readonly resultUploadedByUserId: Prisma.FieldRef<"LabOrder", 'String'>
+  readonly approvedByUserId: Prisma.FieldRef<"LabOrder", 'String'>
+  readonly approvedAt: Prisma.FieldRef<"LabOrder", 'DateTime'>
+  readonly approvalNotes: Prisma.FieldRef<"LabOrder", 'String'>
+  readonly notes: Prisma.FieldRef<"LabOrder", 'String'>
 }
     
 

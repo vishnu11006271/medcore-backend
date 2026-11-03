@@ -17,6 +17,7 @@ import { RegisterDto } from './dto/register.dto.js';
 import { VerifyEmailDto } from './dto/verify-email.dto.js';
 import { createHash, randomBytes } from 'crypto';
 import { randomUUID } from 'node:crypto';
+import { UserRole } from '../generated/prisma/enums.js';
 
 @Injectable()
 export class AuthService {
@@ -95,63 +96,179 @@ export class AuthService {
   }
 
   
+  // async register(dto: RegisterDto) {
+  //   const email = dto.email.trim().toLowerCase();
+
+  //   // Do not create duplicate accounts.
+  //   const existingUser = await this.prisma.user.findUnique({
+  //     where: { email },
+  //     select: { id: true },
+  //   });
+
+  //   if (existingUser) {
+  //     throw new ConflictException({
+  //       code: 'EMAIL_ALREADY_REGISTERED',
+  //       message: 'An account with this email already exists.',
+  //     });
+  //   }
+
+  //   // Never store a plain-text password.
+  //   const passwordHash = await bcrypt.hash(dto.password, 12);
+
+  //   // Generate a cryptographically secure six-digit OTP.
+  //   const otp = randomInt(100000, 1000000).toString();
+  //   const codeHash = await bcrypt.hash(otp, 10);
+  //   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+  //   // const result = await this.prisma.$transaction(async (tx) => {
+  //   //   const user = await tx.user.create({
+  //   //     data: {
+  //   //       email,
+  //   //       firstName: dto.firstName.trim(),
+  //   //       lastName: dto.lastName.trim(),
+  //   //       passwordHash,
+  //   //       role: 'PATIENT',
+  //   //       isActive: true,
+  //   //     },
+  //   //     select: {
+  //   //       id: true,
+  //   //       email: true,
+  //   //       firstName: true,
+  //   //       lastName: true,
+  //   //       role: true,
+  //   //     },
+  //   //   });
+
+  //   //   await tx.emailOtp.create({
+  //   //     data: {
+  //   //       userId: user.id,
+  //   //       email,
+  //   //       codeHash,
+  //   //       purpose: 'EMAIL_VERIFICATION',
+  //   //       expiresAt,
+  //   //     },
+  //   //   });
+
+  //   //   return user;
+  //   // });
+  //   const result = await this.prisma.$transaction(async (tx) => {
+  //     const hospital = await tx.hospital.findUnique({
+  //       where: { id: dto.hospitalId },
+  //       select: {
+  //         id: true,
+  //         status: true,
+  //       },
+  //     });
+
+  //     if (!hospital || hospital.status !== 'VERIFIED') {
+  //       throw new BadRequestException({
+  //         code: 'INVALID_HOSPITAL',
+  //         message: 'Please select a valid, verified hospital.',
+  //       });
+  //     }
+
+  //     const user = await tx.user.create({
+  //       data: {
+  //         email,
+  //         firstName: dto.firstName.trim(),
+  //         lastName: dto.lastName.trim(),
+  //         passwordHash,
+  //         role: 'PATIENT',
+  //         isActive: true,
+  //         hospitalId: hospital.id,
+  //       },
+  //       select: {
+  //         id: true,
+  //         email: true,
+  //         firstName: true,
+  //         lastName: true,
+  //         role: true,
+  //       },
+  //     });
+
+  //     const patient = await tx.patient.create({
+  //       data: {
+  //         userId: user.id,
+  //         hospitalId: hospital.id,
+  //         patientNumber: `PAT-${randomUUID()}`,
+  //       },
+  //     });
+
+  //     await tx.emailOtp.create({
+  //       data: {
+  //         userId: user.id,
+  //         email,
+  //         codeHash,
+  //         purpose: 'EMAIL_VERIFICATION',
+  //         expiresAt,
+  //       },
+  //     });
+
+  //     return {
+  //       ...user,
+  //       patientId: patient.id,
+  //     };
+  //   });
+
+  //   // Temporary local development delivery.
+  //   // Replace this with a real email provider before production.
+  //   if (process.env.NODE_ENV !== 'production') {
+  //     console.log(`[DEV EMAIL OTP] ${email}: ${otp}`);
+  //   }
+
+  //   return {
+  //     user: result,
+  //     otpExpiresAt: expiresAt,
+  //   };
+  // }
+
   async register(dto: RegisterDto) {
-    const email = dto.email.trim().toLowerCase();
+  const email = dto.email.trim().toLowerCase();
 
-    // Do not create duplicate accounts.
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email },
-      select: { id: true },
+  const existingUser = await this.prisma.user.findUnique({
+    where: { email },
+    select: { id: true },
+  });
+
+  if (existingUser) {
+    throw new ConflictException({
+      code: 'EMAIL_ALREADY_REGISTERED',
+      message: 'An account with this email already exists.',
     });
+  }
 
-    if (existingUser) {
-      throw new ConflictException({
-        code: 'EMAIL_ALREADY_REGISTERED',
-        message: 'An account with this email already exists.',
-      });
-    }
+  const role = dto.role ?? UserRole.PATIENT;
 
-    // Never store a plain-text password.
-    const passwordHash = await bcrypt.hash(dto.password, 12);
+  // Prevent public registration into privileged roles.
+  const allowedPublicRoles: UserRole[] = [
+    UserRole.PATIENT,
+    UserRole.DOCTOR,
+    UserRole.NURSE,
+    UserRole.RECEPTIONIST,
+    UserRole.LAB_TECHNICIAN,
+    UserRole.PHARMACIST,
+    UserRole.ACCOUNTANT,
+    UserRole.HOSPITAL_ADMIN,
+  ];
 
-    // Generate a cryptographically secure six-digit OTP.
-    const otp = randomInt(100000, 1000000).toString();
-    const codeHash = await bcrypt.hash(otp, 10);
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  if (!allowedPublicRoles.includes(role)) {
+    throw new BadRequestException({
+      code: 'INVALID_ROLE',
+      message: 'The selected role cannot be registered through this endpoint.',
+    });
+  }
 
-    // const result = await this.prisma.$transaction(async (tx) => {
-    //   const user = await tx.user.create({
-    //     data: {
-    //       email,
-    //       firstName: dto.firstName.trim(),
-    //       lastName: dto.lastName.trim(),
-    //       passwordHash,
-    //       role: 'PATIENT',
-    //       isActive: true,
-    //     },
-    //     select: {
-    //       id: true,
-    //       email: true,
-    //       firstName: true,
-    //       lastName: true,
-    //       role: true,
-    //     },
-    //   });
+  const passwordHash = await bcrypt.hash(dto.password, 12);
 
-    //   await tx.emailOtp.create({
-    //     data: {
-    //       userId: user.id,
-    //       email,
-    //       codeHash,
-    //       purpose: 'EMAIL_VERIFICATION',
-    //       expiresAt,
-    //     },
-    //   });
+  const otp = randomInt(100000, 1000000).toString();
+  const codeHash = await bcrypt.hash(otp, 10);
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    //   return user;
-    // });
-    const result = await this.prisma.$transaction(async (tx) => {
-      const hospital = await tx.hospital.findUnique({
+  const result = await this.prisma.$transaction(async (tx) => {
+    let hospital: { id: string; status: string } | null = null;
+
+    if (dto.hospitalId) {
+      hospital = await tx.hospital.findUnique({
         where: { id: dto.hospitalId },
         select: {
           id: true,
@@ -165,26 +282,31 @@ export class AuthService {
           message: 'Please select a valid, verified hospital.',
         });
       }
+    }
 
-      const user = await tx.user.create({
-        data: {
-          email,
-          firstName: dto.firstName.trim(),
-          lastName: dto.lastName.trim(),
-          passwordHash,
-          role: 'PATIENT',
-          isActive: true,
-          hospitalId: hospital.id,
-        },
-        select: {
-          id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          role: true,
-        },
-      });
+    const user = await tx.user.create({
+      data: {
+        email,
+        firstName: dto.firstName.trim(),
+        lastName: dto.lastName.trim(),
+        passwordHash,
+        role,
+        isActive: true,
+        hospitalId: hospital?.id ?? null,
+      },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+        hospitalId: true,
+      },
+    });
 
+    let patientId: string | undefined;
+
+    if (role === UserRole.PATIENT && hospital) {
       const patient = await tx.patient.create({
         data: {
           userId: user.id,
@@ -193,33 +315,34 @@ export class AuthService {
         },
       });
 
-      await tx.emailOtp.create({
-        data: {
-          userId: user.id,
-          email,
-          codeHash,
-          purpose: 'EMAIL_VERIFICATION',
-          expiresAt,
-        },
-      });
-
-      return {
-        ...user,
-        patientId: patient.id,
-      };
-    });
-
-    // Temporary local development delivery.
-    // Replace this with a real email provider before production.
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`[DEV EMAIL OTP] ${email}: ${otp}`);
+      patientId = patient.id;
     }
 
+    await tx.emailOtp.create({
+      data: {
+        userId: user.id,
+        email,
+        codeHash,
+        purpose: 'EMAIL_VERIFICATION',
+        expiresAt,
+      },
+    });
+
     return {
-      user: result,
-      otpExpiresAt: expiresAt,
+      ...user,
+      patientId,
     };
+  });
+
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`[DEV EMAIL OTP] ${email}: ${otp}`);
   }
+
+  return {
+    user: result,
+    otpExpiresAt: expiresAt,
+  };
+}
 
   async verifyEmail(dto: VerifyEmailDto) {
     const email = dto.email.trim().toLowerCase();

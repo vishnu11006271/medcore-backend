@@ -89,6 +89,9 @@ export const LabOrderStatus = {
   ORDERED: 'ORDERED',
   SAMPLE_COLLECTED: 'SAMPLE_COLLECTED',
   PROCESSING: 'PROCESSING',
+  RESULT_UPLOADED: 'RESULT_UPLOADED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED'
 } as const
@@ -105,6 +108,36 @@ export const InvoiceStatus = {
 } as const
 
 export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+  PARTIALLY_REFUNDED: 'PARTIALLY_REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const PaymentMethod = {
+  CASH: 'CASH',
+  UPI: 'UPI',
+  CARD: 'CARD',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  OTHER: 'OTHER'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PaymentProvider = {
+  NONE: 'NONE',
+  RAZORPAY: 'RAZORPAY'
+} as const
+
+export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
 
 
 export const OtpPurpose = {

@@ -296,6 +296,7 @@ export type InvoiceWhereInput = {
   appointment?: Prisma.XOR<Prisma.AppointmentScalarRelationFilter, Prisma.AppointmentWhereInput>
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
   items?: Prisma.InvoiceItemListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }
 
 export type InvoiceOrderByWithRelationInput = {
@@ -316,6 +317,7 @@ export type InvoiceOrderByWithRelationInput = {
   appointment?: Prisma.AppointmentOrderByWithRelationInput
   patient?: Prisma.PatientOrderByWithRelationInput
   items?: Prisma.InvoiceItemOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
 export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -340,6 +342,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   appointment?: Prisma.XOR<Prisma.AppointmentScalarRelationFilter, Prisma.AppointmentWhereInput>
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
   items?: Prisma.InvoiceItemListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }, "id" | "appointmentId" | "hospitalId_invoiceNumber">
 
 export type InvoiceOrderByWithAggregationInput = {
@@ -397,6 +400,7 @@ export type InvoiceCreateInput = {
   appointment: Prisma.AppointmentCreateNestedOneWithoutInvoiceInput
   patient: Prisma.PatientCreateNestedOneWithoutInvoicesInput
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoiceInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateInput = {
@@ -414,6 +418,7 @@ export type InvoiceUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceUpdateInput = {
@@ -431,6 +436,7 @@ export type InvoiceUpdateInput = {
   appointment?: Prisma.AppointmentUpdateOneRequiredWithoutInvoiceNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutInvoicesNestedInput
   items?: Prisma.InvoiceItemUpdateManyWithoutInvoiceNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateInput = {
@@ -448,6 +454,7 @@ export type InvoiceUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceCreateManyInput = {
@@ -716,6 +723,20 @@ export type InvoiceUpdateOneRequiredWithoutItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutItemsInput, Prisma.InvoiceUpdateWithoutItemsInput>, Prisma.InvoiceUncheckedUpdateWithoutItemsInput>
 }
 
+export type InvoiceCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPaymentsInput, Prisma.InvoiceUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.InvoiceWhereUniqueInput
+}
+
+export type InvoiceUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPaymentsInput, Prisma.InvoiceUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.InvoiceUpsertWithoutPaymentsInput
+  connect?: Prisma.InvoiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutPaymentsInput, Prisma.InvoiceUpdateWithoutPaymentsInput>, Prisma.InvoiceUncheckedUpdateWithoutPaymentsInput>
+}
+
 export type InvoiceCreateWithoutHospitalInput = {
   id?: string
   invoiceNumber: string
@@ -730,6 +751,7 @@ export type InvoiceCreateWithoutHospitalInput = {
   appointment: Prisma.AppointmentCreateNestedOneWithoutInvoiceInput
   patient: Prisma.PatientCreateNestedOneWithoutInvoicesInput
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoiceInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutHospitalInput = {
@@ -746,6 +768,7 @@ export type InvoiceUncheckedCreateWithoutHospitalInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutHospitalInput = {
@@ -807,6 +830,7 @@ export type InvoiceCreateWithoutPatientInput = {
   hospital: Prisma.HospitalCreateNestedOneWithoutInvoicesInput
   appointment: Prisma.AppointmentCreateNestedOneWithoutInvoiceInput
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoiceInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutPatientInput = {
@@ -823,6 +847,7 @@ export type InvoiceUncheckedCreateWithoutPatientInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutPatientInput = {
@@ -865,6 +890,7 @@ export type InvoiceCreateWithoutAppointmentInput = {
   hospital: Prisma.HospitalCreateNestedOneWithoutInvoicesInput
   patient: Prisma.PatientCreateNestedOneWithoutInvoicesInput
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoiceInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutAppointmentInput = {
@@ -881,6 +907,7 @@ export type InvoiceUncheckedCreateWithoutAppointmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutAppointmentInput = {
@@ -913,6 +940,7 @@ export type InvoiceUpdateWithoutAppointmentInput = {
   hospital?: Prisma.HospitalUpdateOneRequiredWithoutInvoicesNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutInvoicesNestedInput
   items?: Prisma.InvoiceItemUpdateManyWithoutInvoiceNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutAppointmentInput = {
@@ -929,6 +957,7 @@ export type InvoiceUncheckedUpdateWithoutAppointmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceCreateWithoutItemsInput = {
@@ -945,6 +974,7 @@ export type InvoiceCreateWithoutItemsInput = {
   hospital: Prisma.HospitalCreateNestedOneWithoutInvoicesInput
   appointment: Prisma.AppointmentCreateNestedOneWithoutInvoiceInput
   patient: Prisma.PatientCreateNestedOneWithoutInvoicesInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutItemsInput = {
@@ -961,6 +991,7 @@ export type InvoiceUncheckedCreateWithoutItemsInput = {
   issuedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutItemsInput = {
@@ -993,6 +1024,7 @@ export type InvoiceUpdateWithoutItemsInput = {
   hospital?: Prisma.HospitalUpdateOneRequiredWithoutInvoicesNestedInput
   appointment?: Prisma.AppointmentUpdateOneRequiredWithoutInvoiceNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutInvoicesNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutItemsInput = {
@@ -1009,6 +1041,91 @@ export type InvoiceUncheckedUpdateWithoutItemsInput = {
   issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceCreateWithoutPaymentsInput = {
+  id?: string
+  invoiceNumber: string
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.InvoiceStatus
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hospital: Prisma.HospitalCreateNestedOneWithoutInvoicesInput
+  appointment: Prisma.AppointmentCreateNestedOneWithoutInvoiceInput
+  patient: Prisma.PatientCreateNestedOneWithoutInvoicesInput
+  items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceUncheckedCreateWithoutPaymentsInput = {
+  id?: string
+  hospitalId: string
+  appointmentId: string
+  patientId: string
+  invoiceNumber: string
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.InvoiceStatus
+  issuedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.InvoiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutPaymentsInput, Prisma.InvoiceUncheckedCreateWithoutPaymentsInput>
+}
+
+export type InvoiceUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutPaymentsInput, Prisma.InvoiceUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutPaymentsInput, Prisma.InvoiceUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.InvoiceWhereInput
+}
+
+export type InvoiceUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.InvoiceWhereInput
+  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutPaymentsInput, Prisma.InvoiceUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type InvoiceUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hospital?: Prisma.HospitalUpdateOneRequiredWithoutInvoicesNestedInput
+  appointment?: Prisma.AppointmentUpdateOneRequiredWithoutInvoiceNestedInput
+  patient?: Prisma.PatientUpdateOneRequiredWithoutInvoicesNestedInput
+  items?: Prisma.InvoiceItemUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  hospitalId?: Prisma.StringFieldUpdateOperationsInput | string
+  appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  patientId?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceCreateManyHospitalInput = {
@@ -1040,6 +1157,7 @@ export type InvoiceUpdateWithoutHospitalInput = {
   appointment?: Prisma.AppointmentUpdateOneRequiredWithoutInvoiceNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutInvoicesNestedInput
   items?: Prisma.InvoiceItemUpdateManyWithoutInvoiceNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutHospitalInput = {
@@ -1056,6 +1174,7 @@ export type InvoiceUncheckedUpdateWithoutHospitalInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateManyWithoutHospitalInput = {
@@ -1102,6 +1221,7 @@ export type InvoiceUpdateWithoutPatientInput = {
   hospital?: Prisma.HospitalUpdateOneRequiredWithoutInvoicesNestedInput
   appointment?: Prisma.AppointmentUpdateOneRequiredWithoutInvoiceNestedInput
   items?: Prisma.InvoiceItemUpdateManyWithoutInvoiceNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutPatientInput = {
@@ -1118,6 +1238,7 @@ export type InvoiceUncheckedUpdateWithoutPatientInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateManyWithoutPatientInput = {
@@ -1142,10 +1263,12 @@ export type InvoiceUncheckedUpdateManyWithoutPatientInput = {
 
 export type InvoiceCountOutputType = {
   items: number
+  payments: number
 }
 
 export type InvoiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | InvoiceCountOutputTypeCountItemsArgs
+  payments?: boolean | InvoiceCountOutputTypeCountPaymentsArgs
 }
 
 /**
@@ -1163,6 +1286,13 @@ export type InvoiceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
  */
 export type InvoiceCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InvoiceItemWhereInput
+}
+
+/**
+ * InvoiceCountOutputType without action
+ */
+export type InvoiceCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
 }
 
 
@@ -1184,6 +1314,7 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Invoice$itemsArgs<ExtArgs>
+  payments?: boolean | Prisma.Invoice$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
 
@@ -1247,6 +1378,7 @@ export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Invoice$itemsArgs<ExtArgs>
+  payments?: boolean | Prisma.Invoice$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1267,6 +1399,7 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     appointment: Prisma.$AppointmentPayload<ExtArgs>
     patient: Prisma.$PatientPayload<ExtArgs>
     items: Prisma.$InvoiceItemPayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1680,6 +1813,7 @@ export interface Prisma__InvoiceClient<T, Null = never, ExtArgs extends runtime.
   appointment<T extends Prisma.AppointmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AppointmentDefaultArgs<ExtArgs>>): Prisma.Prisma__AppointmentClient<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   patient<T extends Prisma.PatientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PatientDefaultArgs<ExtArgs>>): Prisma.Prisma__PatientClient<runtime.Types.Result.GetResult<Prisma.$PatientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Invoice$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.Invoice$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2144,6 +2278,30 @@ export type Invoice$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.InvoiceItemScalarFieldEnum | Prisma.InvoiceItemScalarFieldEnum[]
+}
+
+/**
+ * Invoice.payments
+ */
+export type Invoice$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
 }
 
 /**

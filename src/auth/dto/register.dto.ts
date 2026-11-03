@@ -1,11 +1,13 @@
 
 import {
   IsEmail,
+  IsOptional,
   IsString,
   IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { UserRole } from '../../generated/prisma/enums.js';
 
 export class RegisterDto {
   @IsEmail()
@@ -27,6 +29,11 @@ export class RegisterDto {
   @MaxLength(128)
   password: string;
 
+  @IsOptional()
+  @MaxLength(254)
+  role?: UserRole;
+
+  @IsOptional()
   @IsUUID()
-  hospitalId!: string;
+  hospitalId?: string;
 }

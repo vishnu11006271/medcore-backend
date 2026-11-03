@@ -66,13 +66,18 @@ export const ModelName = {
   LabOrder: 'LabOrder',
   Invoice: 'Invoice',
   InvoiceItem: 'InvoiceItem',
+  Payment: 'Payment',
   Notification: 'Notification',
   AuditLog: 'AuditLog',
   RefreshToken: 'RefreshToken',
   EmailOtp: 'EmailOtp',
   DoctorAvailability: 'DoctorAvailability',
   VitalSign: 'VitalSign',
-  PatientAllergy: 'PatientAllergy'
+  PatientAllergy: 'PatientAllergy',
+  MedicineBatch: 'MedicineBatch',
+  PharmacyDispense: 'PharmacyDispense',
+  PharmacyDispenseItem: 'PharmacyDispenseItem',
+  PharmacyBatchAllocation: 'PharmacyBatchAllocation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -297,7 +302,12 @@ export const LabOrderScalarFieldEnum = {
   resultFileUrl: 'resultFileUrl',
   orderedAt: 'orderedAt',
   completedAt: 'completedAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  resultUploadedByUserId: 'resultUploadedByUserId',
+  approvedByUserId: 'approvedByUserId',
+  approvedAt: 'approvedAt',
+  approvalNotes: 'approvalNotes',
+  notes: 'notes'
 } as const
 
 export type LabOrderScalarFieldEnum = (typeof LabOrderScalarFieldEnum)[keyof typeof LabOrderScalarFieldEnum]
@@ -335,6 +345,30 @@ export const InvoiceItemScalarFieldEnum = {
 } as const
 
 export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  recordedById: 'recordedById',
+  amount: 'amount',
+  refundAmount: 'refundAmount',
+  currency: 'currency',
+  method: 'method',
+  provider: 'provider',
+  status: 'status',
+  providerOrderId: 'providerOrderId',
+  providerPaymentId: 'providerPaymentId',
+  referenceNumber: 'referenceNumber',
+  idempotencyKey: 'idempotencyKey',
+  failureReason: 'failureReason',
+  notes: 'notes',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
@@ -443,6 +477,58 @@ export const PatientAllergyScalarFieldEnum = {
 } as const
 
 export type PatientAllergyScalarFieldEnum = (typeof PatientAllergyScalarFieldEnum)[keyof typeof PatientAllergyScalarFieldEnum]
+
+
+export const MedicineBatchScalarFieldEnum = {
+  id: 'id',
+  medicineId: 'medicineId',
+  batchNumber: 'batchNumber',
+  expiryDate: 'expiryDate',
+  quantityReceived: 'quantityReceived',
+  quantityAvailable: 'quantityAvailable',
+  purchasePrice: 'purchasePrice',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MedicineBatchScalarFieldEnum = (typeof MedicineBatchScalarFieldEnum)[keyof typeof MedicineBatchScalarFieldEnum]
+
+
+export const PharmacyDispenseScalarFieldEnum = {
+  id: 'id',
+  prescriptionId: 'prescriptionId',
+  dispensedByUserId: 'dispensedByUserId',
+  dispensedAt: 'dispensedAt',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type PharmacyDispenseScalarFieldEnum = (typeof PharmacyDispenseScalarFieldEnum)[keyof typeof PharmacyDispenseScalarFieldEnum]
+
+
+export const PharmacyDispenseItemScalarFieldEnum = {
+  id: 'id',
+  dispenseId: 'dispenseId',
+  prescriptionItemId: 'prescriptionItemId',
+  medicineId: 'medicineId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  createdAt: 'createdAt'
+} as const
+
+export type PharmacyDispenseItemScalarFieldEnum = (typeof PharmacyDispenseItemScalarFieldEnum)[keyof typeof PharmacyDispenseItemScalarFieldEnum]
+
+
+export const PharmacyBatchAllocationScalarFieldEnum = {
+  id: 'id',
+  dispenseItemId: 'dispenseItemId',
+  batchId: 'batchId',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type PharmacyBatchAllocationScalarFieldEnum = (typeof PharmacyBatchAllocationScalarFieldEnum)[keyof typeof PharmacyBatchAllocationScalarFieldEnum]
 
 
 export const SortOrder = {

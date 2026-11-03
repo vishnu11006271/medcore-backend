@@ -3,8 +3,6 @@
 
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
-
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -73,6 +71,9 @@ enum LabOrderStatus {
   ORDERED
   SAMPLE_COLLECTED
   PROCESSING
+  RESULT_UPLOADED
+  APPROVED
+  REJECTED
   COMPLETED
   CANCELLED
 }
@@ -83,6 +84,27 @@ enum InvoiceStatus {
   PARTIALLY_PAID
   PAID
   VOID
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  BANK_TRANSFER
+  OTHER
+}
+
+enum PaymentProvider {
+  NONE
+  RAZORPAY
 }
 
 enum OtpPurpose {
@@ -119,18 +141,18 @@ model Hospital {
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
-  users              User[]
-  departments        Department[]
-  rooms              Room[]
-  patients           Patient[]
-  appointments       Appointment[]
-  medicalRecords     MedicalRecord[]
-  medicines          Medicine[]
-  labTests           LabTest[]
-  invoices           Invoice[]
-  notifications      Notification[]
-  auditLogs          AuditLog[]
-  allergies          PatientAllergy[]
+  users          User[]
+  departments    Department[]
+  rooms          Room[]
+  patients       Patient[]
+  appointments   Appointment[]
+  medicalRecords MedicalRecord[]
+  medicines      Medicine[]
+  labTests       LabTest[]
+  invoices       Invoice[]
+  notifications  Notification[]
+  auditLogs      AuditLog[]
+  allergies      PatientAllergy[]
 
   @@index([status, createdAt])
 }
@@ -150,13 +172,14 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  hospital        Hospital?     @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
-  doctorProfile   Doctor?
-  patientProfile  Patient?
-  refreshTokens   RefreshToken[]
-  emailOtps       EmailOtp[]
-  notifications   Notification[]
-  auditLogs       AuditLog[]
+  hospital         Hospital?      @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  doctorProfile    Doctor?
+  patientProfile   Patient?
+  refreshTokens    RefreshToken[]
+  emailOtps        EmailOtp[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  recordedPayments Payment[]      @relation("PaymentRecordedBy")
 
   @@index([hospitalId, role])
   @@index([hospitalId, isActive])
@@ -182,24 +205,24 @@ model Department {
 }
 
 model Doctor {
-  id                String   @id @default(uuid())
-  userId            String   @unique
-  departmentId      String?
-  licenseNumber     String   @unique
-  specialization    String
-  qualification     String?
-  experienceYears   Int?
-  consultationFee   Decimal  @default(0) @db.Decimal(12, 2)
-  bio               String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  departmentId    String?
+  licenseNumber   String   @unique
+  specialization  String
+  qualification   String?
+  experienceYears Int?
+  consultationFee Decimal  @default(0) @db.Decimal(12, 2)
+  bio             String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  user           User           @relation(fields: [userId], references: [id], onDelete: Restrict)
-  department     Department?    @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  user           User            @relation(fields: [userId], references: [id], onDelete: Restrict)
+  department     Department?     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   appointments   Appointment[]
   medicalRecords MedicalRecord[]
   prescriptions  Prescription[]
-  labOrders      LabOrder[]     @relation("LabOrdersByDoctor")
+  labOrders      LabOrder[]      @relation("LabOrdersByDoctor")
 
   availabilities DoctorAvailability[]
 
@@ -207,20 +230,20 @@ model Doctor {
 }
 
 model Patient {
-  id                String   @id @default(uuid())
-  userId            String   @unique
-  hospitalId        String
-  patientNumber     String
-  dateOfBirth       DateTime?
-  gender            Gender?
-  bloodGroup        String?
-  address           String?
-  emergencyContact  String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id               String    @id @default(uuid())
+  userId           String    @unique
+  hospitalId       String
+  patientNumber    String
+  dateOfBirth      DateTime?
+  gender           Gender?
+  bloodGroup       String?
+  address          String?
+  emergencyContact String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  user           User           @relation(fields: [userId], references: [id], onDelete: Restrict)
-  hospital       Hospital       @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Restrict)
+  hospital       Hospital         @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
   appointments   Appointment[]
   medicalRecords MedicalRecord[]
   invoices       Invoice[]
@@ -248,25 +271,25 @@ model Room {
 }
 
 model Appointment {
-  id             String            @id @default(uuid())
-  hospitalId     String
-  patientId      String
-  doctorId       String
-  departmentId   String
-  scheduledAt    DateTime
-  durationMinutes Int              @default(30)
-  status         AppointmentStatus @default(PENDING)
-  reason         String?
-  notes          String?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id              String            @id @default(uuid())
+  hospitalId      String
+  patientId       String
+  doctorId        String
+  departmentId    String
+  scheduledAt     DateTime
+  durationMinutes Int               @default(30)
+  status          AppointmentStatus @default(PENDING)
+  reason          String?
+  notes           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
-  hospital     Hospital      @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
-  patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Restrict)
-  doctor       Doctor        @relation(fields: [doctorId], references: [id], onDelete: Restrict)
-  department   Department    @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  hospital      Hospital       @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  patient       Patient        @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  doctor        Doctor         @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+  department    Department     @relation(fields: [departmentId], references: [id], onDelete: Restrict)
   medicalRecord MedicalRecord?
-  invoice      Invoice?
+  invoice       Invoice?
 
   @@index([hospitalId, scheduledAt])
   @@index([doctorId, scheduledAt])
@@ -288,56 +311,59 @@ model MedicalRecord {
   recordedAt    DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
-  hospital     Hospital       @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
-  appointment  Appointment    @relation(fields: [appointmentId], references: [id], onDelete: Restrict)
-  patient      Patient        @relation(fields: [patientId], references: [id], onDelete: Restrict)
-  doctor       Doctor         @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+  hospital      Hospital       @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  appointment   Appointment    @relation(fields: [appointmentId], references: [id], onDelete: Restrict)
+  patient       Patient        @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  doctor        Doctor         @relation(fields: [doctorId], references: [id], onDelete: Restrict)
   prescriptions Prescription[]
   labOrders     LabOrder[]
-  vitals VitalSign[]
+  vitals        VitalSign[]
 
   @@index([hospitalId, patientId, recordedAt])
   @@index([doctorId, recordedAt])
 }
 
 model Prescription {
-  id             String             @id @default(uuid())
+  id              String             @id @default(uuid())
   medicalRecordId String
-  prescribedById String
-  status         PrescriptionStatus @default(ACTIVE)
-  notes          String?
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  prescribedById  String
+  status          PrescriptionStatus @default(ACTIVE)
+  notes           String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 
-  medicalRecord MedicalRecord     @relation(fields: [medicalRecordId], references: [id], onDelete: Restrict)
-  prescribedBy  Doctor            @relation(fields: [prescribedById], references: [id], onDelete: Restrict)
+  medicalRecord MedicalRecord      @relation(fields: [medicalRecordId], references: [id], onDelete: Restrict)
+  prescribedBy  Doctor             @relation(fields: [prescribedById], references: [id], onDelete: Restrict)
   items         PrescriptionItem[]
+  dispensations PharmacyDispense[]
 
   @@index([medicalRecordId])
 }
 
 model Medicine {
-  id           String   @id @default(uuid())
-  hospitalId   String
-  name         String
-  genericName  String?
-  strength     String?
-  manufacturer String?
-  stockQuantity Int     @default(0)
-  unitPrice    Decimal  @default(0) @db.Decimal(12, 2)
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id            String   @id @default(uuid())
+  hospitalId    String
+  name          String
+  genericName   String?
+  strength      String?
+  manufacturer  String?
+  stockQuantity Int      @default(0)
+  unitPrice     Decimal  @default(0) @db.Decimal(12, 2)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  hospital Hospital           @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  hospital          Hospital               @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
   prescriptionItems PrescriptionItem[]
+  batches           MedicineBatch[]
+  dispenseItems     PharmacyDispenseItem[]
 
   @@unique([hospitalId, name, strength])
   @@index([hospitalId, isActive])
 }
 
 model PrescriptionItem {
-  id             String   @id @default(uuid())
+  id             String                 @id @default(uuid())
   prescriptionId String
   medicineId     String
   dosage         String
@@ -345,7 +371,8 @@ model PrescriptionItem {
   durationDays   Int?
   quantity       Int
   instructions   String?
-  createdAt      DateTime @default(now())
+  createdAt      DateTime               @default(now())
+  dispenseItems  PharmacyDispenseItem[]
 
   prescription Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Restrict)
   medicine     Medicine     @relation(fields: [medicineId], references: [id], onDelete: Restrict)
@@ -365,7 +392,7 @@ model LabTest {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  hospital Hospital   @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  hospital  Hospital   @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
   labOrders LabOrder[]
 
   @@unique([hospitalId, code])
@@ -373,16 +400,21 @@ model LabTest {
 }
 
 model LabOrder {
-  id             String        @id @default(uuid())
-  medicalRecordId String
-  labTestId      String
-  orderedById    String?
-  status         LabOrderStatus @default(ORDERED)
-  resultText     String?
-  resultFileUrl  String?
-  orderedAt      DateTime      @default(now())
-  completedAt    DateTime?
-  updatedAt      DateTime      @updatedAt
+  id                     String         @id @default(uuid())
+  medicalRecordId        String
+  labTestId              String
+  orderedById            String?
+  status                 LabOrderStatus @default(ORDERED)
+  resultText             String?
+  resultFileUrl          String?
+  orderedAt              DateTime       @default(now())
+  completedAt            DateTime?
+  updatedAt              DateTime       @updatedAt
+  resultUploadedByUserId String?
+  approvedByUserId       String?
+  approvedAt             DateTime?
+  approvalNotes          String?
+  notes                  String?
 
   medicalRecord MedicalRecord @relation(fields: [medicalRecordId], references: [id], onDelete: Restrict)
   labTest       LabTest       @relation(fields: [labTestId], references: [id], onDelete: Restrict)
@@ -408,9 +440,10 @@ model Invoice {
   updatedAt     DateTime      @updatedAt
 
   hospital    Hospital      @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
-  appointment Appointment  @relation(fields: [appointmentId], references: [id], onDelete: Restrict)
-  patient     Patient      @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  appointment Appointment   @relation(fields: [appointmentId], references: [id], onDelete: Restrict)
+  patient     Patient       @relation(fields: [patientId], references: [id], onDelete: Restrict)
   items       InvoiceItem[]
+  payments    Payment[]
 
   @@unique([hospitalId, invoiceNumber])
   @@index([hospitalId, status, createdAt])
@@ -433,16 +466,48 @@ model InvoiceItem {
   @@index([invoiceId])
 }
 
+model Payment {
+  id           String  @id @default(uuid())
+  invoiceId    String
+  recordedById String?
+
+  amount       Decimal @db.Decimal(12, 2)
+  refundAmount Decimal @default(0) @db.Decimal(12, 2)
+  currency     String  @default("INR")
+
+  method   PaymentMethod
+  provider PaymentProvider @default(NONE)
+  status   PaymentStatus   @default(PENDING)
+
+  providerOrderId   String? @unique
+  providerPaymentId String? @unique
+  referenceNumber   String? @unique
+  idempotencyKey    String? @unique
+
+  failureReason String?
+  notes         String?
+  paidAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  invoice    Invoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  recordedBy User?   @relation("PaymentRecordedBy", fields: [recordedById], references: [id], onDelete: SetNull)
+
+  @@index([invoiceId, status])
+  @@index([recordedById, createdAt])
+  @@index([provider, status])
+}
+
 model Notification {
-  id             String    @id @default(uuid())
-  userId         String
-  hospitalId     String?
-  title          String
-  message        String
+  id               String    @id @default(uuid())
+  userId           String
+  hospitalId       String?
+  title            String
+  message          String
   linkedEntityType String?
-  linkedEntityId String?
-  readAt         DateTime?
-  createdAt      DateTime  @default(now())
+  linkedEntityId   String?
+  readAt           DateTime?
+  createdAt        DateTime  @default(now())
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   hospital Hospital? @relation(fields: [hospitalId], references: [id], onDelete: SetNull)
@@ -471,12 +536,12 @@ model AuditLog {
 }
 
 model RefreshToken {
-  id         String   @id @default(uuid())
-  userId     String
-  tokenHash  String   @unique
-  expiresAt  DateTime
-  revokedAt  DateTime?
-  createdAt  DateTime @default(now())
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -501,15 +566,15 @@ model EmailOtp {
 }
 
 model DoctorAvailability {
-  id                   String   @id @default(uuid())
-  doctorId             String
-  dayOfWeek            Int
-  startMinute          Int
-  endMinute            Int
-  slotDurationMinutes  Int      @default(30)
-  isActive              Boolean  @default(true)
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  id                  String   @id @default(uuid())
+  doctorId            String
+  dayOfWeek           Int
+  startMinute         Int
+  endMinute           Int
+  slotDurationMinutes Int      @default(30)
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 
@@ -517,18 +582,18 @@ model DoctorAvailability {
 }
 
 model VitalSign {
-  id             String   @id @default(uuid())
+  id              String @id @default(uuid())
   medicalRecordId String
 
-  systolicBP      Int?
-  diastolicBP     Int?
-  pulseBpm        Int?
-  temperatureC    Float?
-  respiratoryRate Int?
+  systolicBP       Int?
+  diastolicBP      Int?
+  pulseBpm         Int?
+  temperatureC     Float?
+  respiratoryRate  Int?
   oxygenSaturation Float?
-  heightCm        Float?
-  weightKg        Float?
-  notes           String?
+  heightCm         Float?
+  weightKg         Float?
+  notes            String?
 
   recordedAt DateTime @default(now())
   createdAt  DateTime @default(now())
@@ -539,19 +604,19 @@ model VitalSign {
 }
 
 model PatientAllergy {
-  id        String          @id @default(uuid())
+  id         String @id @default(uuid())
   hospitalId String
   patientId  String
 
-  allergen  String
-  type      AllergyType
-  reaction  String?
-  severity  AllergySeverity?
-  notes     String?
-  isActive  Boolean         @default(true)
+  allergen String
+  type     AllergyType
+  reaction String?
+  severity AllergySeverity?
+  notes    String?
+  isActive Boolean          @default(true)
 
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   hospital Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
 
@@ -561,4 +626,69 @@ model PatientAllergy {
   @@index([patientId, createdAt])
 }
 
+model MedicineBatch {
+  id                String   @id @default(uuid())
+  medicineId        String
+  batchNumber       String
+  expiryDate        DateTime
+  quantityReceived  Int
+  quantityAvailable Int
+  purchasePrice     Decimal  @default(0) @db.Decimal(12, 2)
+  receivedAt        DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
+  medicine    Medicine                  @relation(fields: [medicineId], references: [id], onDelete: Restrict)
+  allocations PharmacyBatchAllocation[]
+
+  @@unique([medicineId, batchNumber])
+  @@index([medicineId, expiryDate])
+}
+
+model PharmacyDispense {
+  id                String   @id @default(uuid())
+  prescriptionId    String
+  dispensedByUserId String
+  dispensedAt       DateTime @default(now())
+  notes             String?
+  createdAt         DateTime @default(now())
+
+  prescription Prescription           @relation(fields: [prescriptionId], references: [id], onDelete: Restrict)
+  items        PharmacyDispenseItem[]
+
+  @@index([prescriptionId, dispensedAt])
+  @@index([dispensedByUserId, dispensedAt])
+}
+
+model PharmacyDispenseItem {
+  id                 String   @id @default(uuid())
+  dispenseId         String
+  prescriptionItemId String
+  medicineId         String
+  quantity           Int
+  unitPrice          Decimal  @db.Decimal(12, 2)
+  createdAt          DateTime @default(now())
+
+  dispense         PharmacyDispense          @relation(fields: [dispenseId], references: [id], onDelete: Restrict)
+  prescriptionItem PrescriptionItem          @relation(fields: [prescriptionItemId], references: [id], onDelete: Restrict)
+  medicine         Medicine                  @relation(fields: [medicineId], references: [id], onDelete: Restrict)
+  batchAllocations PharmacyBatchAllocation[]
+
+  @@index([dispenseId])
+  @@index([prescriptionItemId])
+  @@index([medicineId])
+}
+
+model PharmacyBatchAllocation {
+  id             String   @id @default(uuid())
+  dispenseItemId String
+  batchId        String
+  quantity       Int
+  createdAt      DateTime @default(now())
+
+  dispenseItem PharmacyDispenseItem @relation(fields: [dispenseItemId], references: [id], onDelete: Restrict)
+  batch        MedicineBatch        @relation(fields: [batchId], references: [id], onDelete: Restrict)
+
+  @@index([dispenseItemId])
+  @@index([batchId])
+}

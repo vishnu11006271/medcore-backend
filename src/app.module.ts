@@ -14,6 +14,9 @@ import { PrescriptionsModule } from './prescriptions/prescriptions.module.js';
 import { PatientAllergiesService } from './patient-allergies/patient-allergies.service.js';
 import { PatientAllergiesController } from './patient-allergies/patient-allergies.controller.js';
 import { PatientAllergiesModule } from './patient-allergies/patient-allergies.module.js';
+import { LaboratoryModule } from './laboratory/laboratory.module.js';
+import { PharmacyModule } from './pharmacy/pharmacy.module.js';
+import { BillingModule } from './billing/billing.module.js';
 
 @Module({
   imports: [
@@ -29,7 +32,10 @@ import { PatientAllergiesModule } from './patient-allergies/patient-allergies.mo
     AppointmentsModule,
     MedicalRecordsModule,
     PrescriptionsModule,
-    PatientAllergiesModule],
+    PatientAllergiesModule,
+    LaboratoryModule,
+    PharmacyModule,
+    BillingModule],
   controllers: [AppController, PatientAllergiesController],
   providers: [AppService, PatientAllergiesService],
 })
