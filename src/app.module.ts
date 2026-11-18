@@ -17,6 +17,10 @@ import { PatientAllergiesModule } from './patient-allergies/patient-allergies.mo
 import { LaboratoryModule } from './laboratory/laboratory.module.js';
 import { PharmacyModule } from './pharmacy/pharmacy.module.js';
 import { BillingModule } from './billing/billing.module.js';
+import { MailModule } from './mail/mail.module.js';
+import { HospitalDashboardModule } from './hospital-dashboard/hospital-dashboard.module.js';
+import { UsersModule } from './users/users.module.js';
+import { PlatformAnalyticsModule } from './platform-analytics/platform-analytics.module.js';
 
 @Module({
   imports: [
@@ -35,7 +39,11 @@ import { BillingModule } from './billing/billing.module.js';
     PatientAllergiesModule,
     LaboratoryModule,
     PharmacyModule,
-    BillingModule],
+    BillingModule,
+    MailModule,
+    HospitalDashboardModule,
+    UsersModule,
+    PlatformAnalyticsModule],
   controllers: [AppController, PatientAllergiesController],
   providers: [AppService, PatientAllergiesService],
 })

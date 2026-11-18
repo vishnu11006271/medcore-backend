@@ -7,6 +7,7 @@ import {
   IsString,
   Min,
   ValidateNested,
+  MaxLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -34,5 +35,6 @@ export class DispensePrescriptionDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(500)
   notes?: string;
 }

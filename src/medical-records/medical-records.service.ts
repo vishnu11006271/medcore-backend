@@ -550,5 +550,60 @@ export class MedicalRecordsService {
     });
     }
 
+    async findDoctorRecords(userId: string) {
+    const doctor = await this.prisma.doctor.findUnique({
+        where: { userId },
+        include: {
+        user: {
+            select: {
+            hospitalId: true,
+            isActive: true,
+            emailVerifiedAt: true,
+            },
+        },
+        },
+    });
+
+    if (
+        !doctor ||
+        !doctor.user.isActive ||
+        !doctor.user.emailVerifiedAt ||
+        !doctor.user.hospitalId
+    ) {
+        throw new ForbiddenException(
+        'An active, verified doctor account is required',
+        );
+    }
+
+    return this.prisma.medicalRecord.findMany({
+        where: {
+        doctorId: doctor.id,
+        hospitalId: doctor.user.hospitalId,
+        },
+        include: {
+        patient: {
+            include: {
+            user: {
+                select: {
+                firstName: true,
+                lastName: true,
+                },
+            },
+            },
+        },
+        appointment: {
+            select: {
+            id: true,
+            scheduledAt: true,
+            status: true,
+            },
+        },
+        },
+        orderBy: {
+        recordedAt: 'desc',
+        },
+    });
+    }
+
 
 }

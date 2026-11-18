@@ -28,13 +28,13 @@ type AuthenticatedRequest = Request & {
 
 @Controller('hospitals')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('SUPER_ADMIN')
 export class HospitalsController {
   constructor(
     private readonly hospitalsService: HospitalsService,
   ) {}
 
   @Post()
+  @Roles('SUPER_ADMIN')
   async create(@Body() dto: CreateHospitalDto) {
     const hospital = await this.hospitalsService.create(dto);
 
@@ -46,6 +46,7 @@ export class HospitalsController {
   }
 
   @Get()
+  @Roles('SUPER_ADMIN')
   async findAll() {
     const hospitals = await this.hospitalsService.findAll();
 
@@ -56,7 +57,21 @@ export class HospitalsController {
     };
   }
 
+  // Patient-facing endpoint for appointment booking
+  @Get('verified')
+  @Roles('SUPER_ADMIN', 'HOSPITAL_ADMIN', 'PATIENT')
+  async findVerified() {
+    const hospitals = await this.hospitalsService.findVerified();
+
+    return {
+      success: true,
+      data: hospitals,
+      message: 'Verified hospitals retrieved successfully.',
+    };
+  }
+
   @Patch(':id/verify')
+  @Roles('SUPER_ADMIN')
   async verify(
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
@@ -72,4 +87,18 @@ export class HospitalsController {
       message: 'Hospital verified successfully.',
     };
   }
+
+
+  @Patch(':id/reject')
+  @Roles('SUPER_ADMIN')
+  async reject(@Param('id') id: string) {
+    const hospital = await this.hospitalsService.reject(id);
+
+    return {
+      success: true,
+      data: hospital,
+      message: 'Hospital rejected successfully.',
+    };
+  }
+
 }

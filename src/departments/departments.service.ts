@@ -4,17 +4,24 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  ForbiddenException
 } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateDepartmentDto } from './dto/create-department.dto.js';
 import { UpdateDepartmentDto } from './dto/update-department.dto.js';
 
+export interface DepartmentActor {
+  role: 'SUPER_ADMIN' | 'HOSPITAL_ADMIN' | 'PATIENT';
+  hospitalId: string | null;
+}
+
 @Injectable()
 export class DepartmentsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(hospitalId: string, dto: CreateDepartmentDto) {
+  async create(hospitalId: string, dto: CreateDepartmentDto, actor: DepartmentActor) {
+    this.assertHospitalAccess(hospitalId, actor);
     const hospital = await this.prisma.hospital.findUnique({
       where: { id: hospitalId },
       select: { id: true, status: true },
@@ -63,10 +70,15 @@ export class DepartmentsService {
     }
   }
 
-  async findAll(hospitalId: string) {
+  async findAll(hospitalId: string, actor: DepartmentActor) {
+    this.assertHospitalAccess(hospitalId, actor);
+
     const hospital = await this.prisma.hospital.findUnique({
       where: { id: hospitalId },
-      select: { id: true },
+      select: {
+        id: true,
+        status: true,
+      },
     });
 
     if (!hospital) {
@@ -76,9 +88,25 @@ export class DepartmentsService {
       });
     }
 
+    // Patients can only view departments of verified hospitals.
+    if (
+      actor.role === 'PATIENT' &&
+      hospital.status !== 'VERIFIED'
+    ) {
+      throw new ForbiddenException({
+        code: 'HOSPITAL_NOT_AVAILABLE',
+        message: 'Departments are not available for this hospital.',
+      });
+    }
+
     return this.prisma.department.findMany({
-      where: { hospitalId },
-      orderBy: { name: 'asc' },
+      where: {
+        hospitalId,
+        ...(actor.role === 'PATIENT' && { isActive: true }),
+      },
+      orderBy: {
+        name: 'asc',
+      },
       select: {
         id: true,
         hospitalId: true,
@@ -92,10 +120,13 @@ export class DepartmentsService {
     });
   }
 
-  async update(id: string, dto: UpdateDepartmentDto) {
+  async update(id: string, dto: UpdateDepartmentDto, actor: DepartmentActor,) {
     const existing = await this.prisma.department.findUnique({
       where: { id },
-      select: { id: true },
+      select: {
+        id: true,
+        hospitalId: true,
+      },
     });
 
     if (!existing) {
@@ -104,6 +135,8 @@ export class DepartmentsService {
         message: 'Department not found.',
       });
     }
+
+    this.assertHospitalAccess(existing.hospitalId, actor);
 
     try {
       return await this.prisma.department.update({
@@ -141,10 +174,14 @@ export class DepartmentsService {
     }
   }
 
-  async deactivate(id: string) {
+  async deactivate(id: string, actor: DepartmentActor) {
     const existing = await this.prisma.department.findUnique({
       where: { id },
-      select: { id: true, isActive: true },
+      select: {
+        id: true,
+        hospitalId: true,
+        isActive: true,
+      },
     });
 
     if (!existing) {
@@ -153,6 +190,8 @@ export class DepartmentsService {
         message: 'Department not found.',
       });
     }
+
+    this.assertHospitalAccess(existing.hospitalId, actor);
 
     if (!existing.isActive) {
       throw new BadRequestException({
@@ -181,5 +220,66 @@ export class DepartmentsService {
       'code' in error &&
       error.code === 'P2002'
     );
+  }
+
+  private assertHospitalAccess(
+    hospitalId: string,
+    actor: DepartmentActor,
+  ): void {
+    if (
+      actor.role === 'HOSPITAL_ADMIN' &&
+      actor.hospitalId !== hospitalId
+    ) {
+      throw new ForbiddenException({
+        code: 'DEPARTMENT_ACCESS_DENIED',
+        message: 'You can only access departments in your own hospital.',
+      });
+    }
+  }
+
+  async updateStatus(
+    id: string,
+    isActive: boolean,
+    actor: DepartmentActor,
+  ) {
+    const existing = await this.prisma.department.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        hospitalId: true,
+        isActive: true,
+      },
+    });
+
+    if (!existing) {
+      throw new NotFoundException({
+        code: 'DEPARTMENT_NOT_FOUND',
+        message: 'Department not found.',
+      });
+    }
+
+    this.assertHospitalAccess(existing.hospitalId, actor);
+
+    if (existing.isActive === isActive) {
+      throw new BadRequestException({
+        code: 'DEPARTMENT_STATUS_UNCHANGED',
+        message: `Department is already ${isActive ? 'active' : 'inactive'}.`,
+      });
+    }
+
+    return this.prisma.department.update({
+      where: { id },
+      data: { isActive },
+      select: {
+        id: true,
+        hospitalId: true,
+        name: true,
+        code: true,
+        description: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 }

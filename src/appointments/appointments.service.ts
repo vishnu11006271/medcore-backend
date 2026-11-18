@@ -49,6 +49,26 @@ export class AppointmentsService {
       );
     }
 
+    const hospital = await this.prisma.hospital.findUnique({
+      where: {
+        id: dto.hospitalId,
+      },
+      select: {
+        id: true,
+        status: true,
+      },
+    });
+
+    if (!hospital) {
+      throw new NotFoundException('Hospital not found');
+    }
+
+    if (hospital.status !== 'VERIFIED') {
+      throw new BadRequestException(
+        'Appointments can only be booked at verified hospitals',
+      );
+    }
+
     const requestedStart = new Date(dto.scheduledAt);
 
     if (Number.isNaN(requestedStart.getTime())) {
@@ -123,11 +143,11 @@ export class AppointmentsService {
       if (
         !doctor.department ||
         !doctor.department.isActive ||
-        doctor.user.hospitalId !== patient.hospitalId ||
-        doctor.department.hospitalId !== patient.hospitalId
+        doctor.user.hospitalId !== dto.hospitalId ||
+        doctor.department.hospitalId !== dto.hospitalId
       ) {
         throw new BadRequestException(
-          'The doctor is not available for booking at your hospital',
+          'The doctor does not belong to the selected hospital',
         );
       }
 
@@ -225,7 +245,7 @@ export class AppointmentsService {
 
       return tx.appointment.create({
         data: {
-          hospitalId: patient.hospitalId,
+          hospitalId: dto.hospitalId,
           patientId: patient.id,
           doctorId: doctor.id,
           departmentId: doctor.department.id,
@@ -386,6 +406,200 @@ export class AppointmentsService {
     return this.prisma.appointment.findUnique({
       where: { id: appointmentId },
     });
+  }
+
+  async getMyAppointments(userId: string) {
+    const patient = await this.prisma.patient.findUnique({
+      where: { userId },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!patient) {
+      throw new ForbiddenException(
+        'A registered patient profile is required to view appointments',
+      );
+    }
+
+    const appointments = await this.prisma.appointment.findMany({
+      where: {
+        patientId: patient.id,
+      },
+      select: {
+        id: true,
+        scheduledAt: true,
+        durationMinutes: true,
+        status: true,
+        reason: true,
+        createdAt: true,
+
+        doctor: {
+          select: {
+            id: true,
+            specialization: true,
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+
+        hospital: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+
+      orderBy: {
+        scheduledAt: 'asc',
+      },
+    });
+
+    return appointments;
+  }
+
+  async getAppointmentById(
+    appointmentId: string,
+    userId: string,
+  ) {
+    const patient = await this.prisma.patient.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (!patient) {
+      throw new ForbiddenException(
+        'A registered patient profile is required to view appointments',
+      );
+    }
+
+    const appointment = await this.prisma.appointment.findFirst({
+      where: {
+        id: appointmentId,
+        patientId: patient.id,
+      },
+      select: {
+        id: true,
+        hospitalId: true,
+        patientId: true,
+        doctorId: true,
+        departmentId: true,
+        scheduledAt: true,
+        durationMinutes: true,
+        status: true,
+        reason: true,
+        createdAt: true,
+        updatedAt: true,
+
+        doctor: {
+          select: {
+            id: true,
+            specialization: true,
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+
+        hospital: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!appointment) {
+      throw new NotFoundException('Appointment not found');
+    }
+
+    return appointment;
+  }
+
+  async getDoctorAppointments(userId: string) {
+    // Find the doctor profile linked to the logged-in user.
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { userId },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!doctor) {
+      throw new ForbiddenException(
+        'A registered doctor profile is required to view appointments',
+      );
+    }
+
+    // Fetch only appointments assigned to this doctor.
+    const appointments = await this.prisma.appointment.findMany({
+      where: {
+        doctorId: doctor.id,
+      },
+      select: {
+        id: true,
+        scheduledAt: true,
+        durationMinutes: true,
+        status: true,
+        reason: true,
+        createdAt: true,
+        updatedAt: true,
+
+        patient: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+
+        hospital: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        scheduledAt: 'asc',
+      },
+    });
+
+    return appointments;
   }
 
 }

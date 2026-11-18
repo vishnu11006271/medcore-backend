@@ -22,6 +22,7 @@ import type { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 import { RolesGuard } from './guards/roles.guard.js';
 import { Roles } from './decorators/roles.decorator.js';
+import { ResendVerificationOtpDto } from './dto/resend-verification-otp.dto.js';
 
 @Controller('auth')
 export class AuthController {
@@ -53,6 +54,42 @@ export class AuthController {
   }
 
   
+  // @Post('login')
+  // @HttpCode(HttpStatus.OK)
+  // async login(
+  //   @Body() dto: LoginDto,
+  //   @Res({ passthrough: true }) res: Response,
+  // ) {
+  //   const result = await this.authService.login(dto);
+
+  //   const {
+  //     refreshToken,
+  //     refreshTokenExpiresAt
+  //   } = result.user;
+
+  //   // const { accessToken, tokenType, expiresIn } = result;
+
+  //   res.cookie('medcore_refresh', refreshToken, {
+  //     httpOnly: true,
+  //     secure: this.configService.get('NODE_ENV') === 'production',
+  //     sameSite: 'lax',
+  //     path: '/auth',
+  //     expires: refreshTokenExpiresAt,
+  //   });
+
+  //   return {
+  //     success: true,
+  //     data: {
+  //       user: result.user,
+  //       accessToken: result.accessToken,
+  //       tokenType: result.tokenType,
+  //       expiresIn: result.expiresIn,
+  //     },
+  //     message: 'Login successful',
+  //   };
+  // }
+
+  
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
@@ -63,10 +100,9 @@ export class AuthController {
 
     const {
       refreshToken,
-      refreshTokenExpiresAt
+      refreshTokenExpiresAt,
+      ...safeUser
     } = result.user;
-
-    // const { accessToken, tokenType, expiresIn } = result;
 
     res.cookie('medcore_refresh', refreshToken, {
       httpOnly: true,
@@ -79,7 +115,7 @@ export class AuthController {
     return {
       success: true,
       data: {
-        user: result.user,
+        user: safeUser,
         accessToken: result.accessToken,
         tokenType: result.tokenType,
         expiresIn: result.expiresIn,
@@ -87,6 +123,7 @@ export class AuthController {
       message: 'Login successful',
     };
   }
+
 
   
   @Post('refresh')
@@ -179,6 +216,18 @@ export class AuthController {
     return { success: true, message: 'Super Admin access granted.' };
   }
 
+  @Post('resend-verification-otp')
+  @HttpCode(HttpStatus.OK)
+  async resendVerificationOtp(
+    @Body() dto: ResendVerificationOtpDto
+  ) {
+    const data = await this.authService.resendVerificationOtp(dto);
 
+    return {
+      success: true,
+      data,
+      message: data.message
+    };
+  }
 
 }

@@ -77,7 +77,8 @@ export const ModelName = {
   MedicineBatch: 'MedicineBatch',
   PharmacyDispense: 'PharmacyDispense',
   PharmacyDispenseItem: 'PharmacyDispenseItem',
-  PharmacyBatchAllocation: 'PharmacyBatchAllocation'
+  PharmacyBatchAllocation: 'PharmacyBatchAllocation',
+  RazorpayWebhookEvent: 'RazorpayWebhookEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -531,6 +532,23 @@ export const PharmacyBatchAllocationScalarFieldEnum = {
 export type PharmacyBatchAllocationScalarFieldEnum = (typeof PharmacyBatchAllocationScalarFieldEnum)[keyof typeof PharmacyBatchAllocationScalarFieldEnum]
 
 
+export const RazorpayWebhookEventScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  eventType: 'eventType',
+  paymentId: 'paymentId',
+  orderId: 'orderId',
+  payload: 'payload',
+  processed: 'processed',
+  processedAt: 'processedAt',
+  errorMessage: 'errorMessage',
+  receivedAt: 'receivedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RazorpayWebhookEventScalarFieldEnum = (typeof RazorpayWebhookEventScalarFieldEnum)[keyof typeof RazorpayWebhookEventScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -545,6 +563,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

@@ -692,3 +692,22 @@ model PharmacyBatchAllocation {
   @@index([dispenseItemId])
   @@index([batchId])
 }
+
+model RazorpayWebhookEvent {
+  id            String    @id @default(uuid())
+  eventId       String    @unique
+  eventType     String
+  paymentId     String?
+  orderId       String?
+  payload       Json
+  processed     Boolean   @default(false)
+  processedAt   DateTime?
+  errorMessage  String?
+  receivedAt    DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([eventType, receivedAt])
+  @@index([paymentId])
+  @@index([orderId])
+  @@index([processed, receivedAt])
+}

@@ -86,10 +86,13 @@ export class PharmacyService {
 
   // Update medicine details. Stock is managed through batches.
   async updateMedicine(
+    userId: string,
     hospitalId: string,
     medicineId: string,
     dto: UpdateMedicineDto,
   ) {
+    await this.validateHospitalUser(userId, hospitalId);
+
     const medicine = await this.prisma.medicine.findFirst({
       where: {
         id: medicineId,
@@ -148,8 +151,13 @@ export class PharmacyService {
       });
 
       const totalStock = await tx.medicineBatch.aggregate({
-        where: { medicineId: medicine.id },
-        _sum: { quantityAvailable: true },
+        where: {
+          medicineId: medicine.id,
+          expiryDate: { gt: new Date() },
+        },
+        _sum: {
+          quantityAvailable: true,
+        },
       });
 
       await tx.medicine.update({
@@ -191,6 +199,11 @@ export class PharmacyService {
     await this.validateHospitalUser(userId, hospitalId);
 
     // Reject duplicate prescription item IDs in one request.
+    if (!dto.items || dto.items.length === 0) {
+      throw new BadRequestException(
+        'At least one prescription item is required',
+      );
+    }
     const itemIds = dto.items.map((item) => item.prescriptionItemId);
 
     if (new Set(itemIds).size !== itemIds.length) {
@@ -257,6 +270,12 @@ export class PharmacyService {
           if (!prescriptionItem.medicine.isActive) {
             throw new BadRequestException(
               `Medicine ${prescriptionItem.medicine.name} is inactive`,
+            );
+          }
+
+          if (prescriptionItem.medicine.hospitalId !== hospitalId) {
+            throw new ForbiddenException(
+              'Prescription contains a medicine from another hospital',
             );
           }
 
@@ -363,10 +382,11 @@ export class PharmacyService {
             );
           }
 
-          // Keep Medicine.stockQuantity as the aggregate of all batches.
+
           const totalStock = await tx.medicineBatch.aggregate({
             where: {
               medicineId: prescriptionItem.medicineId,
+              expiryDate: { gt: new Date() },
             },
             _sum: {
               quantityAvailable: true,
@@ -442,4 +462,113 @@ export class PharmacyService {
       },
     });
   }
+
+
+  async findActivePrescriptions(hospitalId: string) {
+    const prescriptions = await this.prisma.prescription.findMany({
+      where: {
+        status: 'ACTIVE',
+        medicalRecord: {
+          hospitalId,
+        },
+      },
+      include: {
+        medicalRecord: {
+          include: {
+            patient: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                  },
+                },
+              },
+            },
+            doctor: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        items: {
+          include: {
+            medicine: true,
+            dispenseItems: {
+              select: {
+                quantity: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return prescriptions
+      .map((prescription) => {
+        const items = prescription.items
+          .map((item) => {
+            const dispensedQuantity = item.dispenseItems.reduce(
+              (total, dispenseItem) => total + dispenseItem.quantity,
+              0,
+            );
+
+            const remainingQuantity = Math.max(
+              0,
+              item.quantity - dispensedQuantity,
+            );
+
+            return {
+              id: item.id,
+              medicineId: item.medicineId,
+              medicineName: item.medicine.name,
+              genericName: item.medicine.genericName,
+              strength: item.medicine.strength,
+              dosage: item.dosage,
+              frequency: item.frequency,
+              durationDays: item.durationDays,
+              prescribedQuantity: item.quantity,
+              dispensedQuantity,
+              remainingQuantity,
+              instructions: item.instructions,
+              isActive: item.medicine.isActive,
+            };
+          })
+          .filter((item) => item.remainingQuantity > 0);
+
+        return {
+          id: prescription.id,
+          status: prescription.status,
+          createdAt: prescription.createdAt,
+          notes: prescription.notes,
+          patient: {
+            id: prescription.medicalRecord.patient.id,
+            patientNumber: prescription.medicalRecord.patient.patientNumber,
+            firstName: prescription.medicalRecord.patient.user.firstName,
+            lastName: prescription.medicalRecord.patient.user.lastName,
+          },
+          doctor: {
+            id: prescription.medicalRecord.doctor.id,
+            firstName: prescription.medicalRecord.doctor.user.firstName,
+            lastName: prescription.medicalRecord.doctor.user.lastName,
+            specialization:
+              prescription.medicalRecord.doctor.specialization,
+          },
+          items,
+        };
+      })
+      .filter((prescription) => prescription.items.length > 0);
+  }
+
 }

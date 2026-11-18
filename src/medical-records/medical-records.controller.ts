@@ -74,6 +74,22 @@ export class MedicalRecordsController {
     };
     }
 
+    @Get('doctor/my')
+    @Roles('DOCTOR')
+    async findDoctorRecords(
+      @Req() req: AuthenticatedRequest,
+    ) {
+      const data = await this.medicalRecordsService.findDoctorRecords(
+        req.user.userId,
+      );
+
+      return {
+        success: true,
+        data,
+        message: 'Doctor medical records fetched successfully',
+      };
+    }
+
 
     @Get(':id')
     @Roles('DOCTOR')

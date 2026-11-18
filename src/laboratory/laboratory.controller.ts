@@ -62,6 +62,7 @@ export class LaboratoryController {
   async findLabTests(@Req() req: any) {
     const result = await this.laboratoryService.findLabTests(
       req.user.userId,
+      req.user.role,
     );
 
     return {
@@ -246,6 +247,24 @@ export class LaboratoryController {
       success: true,
       data: result,
       message: 'Patient laboratory results fetched successfully',
+    };
+  }
+
+  // --------------------------------------------------
+  // HOSPITAL ADMIN: LABORATORY DASHBOARD
+  // --------------------------------------------------
+
+  @Get('admin/dashboard')
+  @Roles('HOSPITAL_ADMIN')
+  async getAdminDashboard(@Req() req: any) {
+    const result = await this.laboratoryService.getAdminDashboard(
+      req.user.userId,
+    );
+
+    return {
+      success: true,
+      data: result,
+      message: 'Laboratory dashboard fetched successfully',
     };
   }
 }

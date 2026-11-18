@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Get,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -131,6 +132,59 @@ export class AppointmentsController {
       success: true,
       data,
       message: 'Appointment cancelled successfully',
+    };
+  }
+
+  @Get('my')
+  @Roles('PATIENT')
+  async getMyAppointments(
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const data =
+      await this.appointmentsService.getMyAppointments(
+        req.user.userId,
+      );
+
+    return {
+      success: true,
+      data,
+      message: 'Appointments retrieved successfully',
+    };
+  }
+
+  @Get(':id')
+  @Roles('PATIENT')
+  async getAppointmentById(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const data =
+      await this.appointmentsService.getAppointmentById(
+        id,
+        req.user.userId,
+      );
+
+    return {
+      success: true,
+      data,
+      message: 'Appointment details retrieved successfully',
+    };
+  }
+
+  @Get('doctor/my')
+  @Roles('DOCTOR')
+  async getDoctorAppointments(
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const data =
+      await this.appointmentsService.getDoctorAppointments(
+        req.user.userId,
+      );
+
+    return {
+      success: true,
+      data,
+      message: 'Doctor appointments retrieved successfully',
     };
   }
 }

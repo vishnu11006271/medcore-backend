@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  ForbiddenException
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { randomInt } from 'crypto';
@@ -10,12 +11,19 @@ import { randomInt } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateDoctorDto } from './dto/create-doctor.dto.js';
 import { UpdateDoctorDto } from './dto/update-doctor.dto.js';
+import { MailService } from '../mail/mail.service.js';
+
+export interface DoctorActor {
+  role: 'SUPER_ADMIN' | 'HOSPITAL_ADMIN' | 'PATIENT';
+  hospitalId: string | null;
+}
 
 @Injectable()
 export class DoctorsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly mailService: MailService) {}
 
-  async create(hospitalId: string, dto: CreateDoctorDto) {
+  async create(hospitalId: string, dto: CreateDoctorDto, actor: DoctorActor) {
+    this.assertHospitalAccess(hospitalId, actor);
     const hospital = await this.prisma.hospital.findUnique({
       where: { id: hospitalId },
       select: { id: true, status: true },
@@ -53,7 +61,7 @@ export class DoctorsService {
     }
 
     const email = dto.email.trim().toLowerCase();
-    const licenseNumber = dto.licenseNumber.trim();
+    const licenseNumber = dto.licenseNumber.trim().toUpperCase();
 
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -159,9 +167,14 @@ export class DoctorsService {
       });
 
       // Development only. Replace with your email provider before deployment.
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(`[Doctor onboarding] Verification OTP for ${email}: ${otp}`);
-      }
+      // if (process.env.NODE_ENV !== 'production') {
+      //   console.log(`[Doctor onboarding] Verification OTP for ${email}: ${otp}`);
+      // }
+      await this.mailService.sendDoctorVerificationOtp(
+        email,
+        dto.firstName.trim(),
+        otp
+      );
 
       return doctor;
     } catch (error) {
@@ -181,19 +194,53 @@ export class DoctorsService {
     }
   }
 
-  async findAll(hospitalId: string) {
+  async findAll(hospitalId: string, actor: DoctorActor) {
+    this.assertHospitalAccess(hospitalId, actor);
+
     const hospital = await this.prisma.hospital.findUnique({
       where: { id: hospitalId },
-      select: { id: true },
+      select: {
+        id: true,
+        status: true,
+      },
     });
 
     if (!hospital) {
-      throw new NotFoundException('Hospital not found');
+      throw new NotFoundException({
+        code: 'HOSPITAL_NOT_FOUND',
+        message: 'Hospital not found.',
+      });
+    }
+
+    // Patients can only view doctors from verified hospitals.
+    if (
+      actor.role === 'PATIENT' &&
+      hospital.status !== 'VERIFIED'
+    ) {
+      throw new ForbiddenException({
+        code: 'HOSPITAL_NOT_AVAILABLE',
+        message: 'Doctors are not available for this hospital.',
+      });
     }
 
     return this.prisma.doctor.findMany({
-      where: { user: { hospitalId } },
-      orderBy: { createdAt: 'desc' },
+      where: {
+        user: {
+          hospitalId,
+          isActive: true,
+          ...(actor.role === 'PATIENT' && {
+            emailVerifiedAt: { not: null },
+          }),
+        },
+        ...(actor.role === 'PATIENT' && {
+          department: {
+            isActive: true,
+          },
+        }),
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
       select: {
         id: true,
         departmentId: true,
@@ -216,13 +263,17 @@ export class DoctorsService {
           },
         },
         department: {
-          select: { id: true, name: true, code: true },
+          select: {
+            id: true,
+            name: true,
+            code: true,
+          },
         },
       },
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, actor: DoctorActor) {
     const doctor = await this.prisma.doctor.findUnique({
       where: { id },
       select: {
@@ -258,11 +309,21 @@ export class DoctorsService {
     if (!doctor) {
       throw new NotFoundException('Doctor not found');
     }
+    const hospitalId = doctor.user.hospitalId;
+
+    if (!hospitalId) {
+      throw new ForbiddenException({
+        code: 'DOCTOR_HOSPITAL_UNASSIGNED',
+        message: 'Doctor is not assigned to a hospital.',
+      });
+    }
+
+    this.assertHospitalAccess(hospitalId, actor);
 
     return doctor;
   }
 
-  async update(id: string, dto: UpdateDoctorDto) {
+  async update(id: string, dto: UpdateDoctorDto, actor: DoctorActor) {
     const doctor = await this.prisma.doctor.findUnique({
       where: { id },
       include: { user: true },
@@ -272,11 +333,22 @@ export class DoctorsService {
       throw new NotFoundException('Doctor not found');
     }
 
+    const hospitalId = doctor.user.hospitalId;
+
+    if (!hospitalId) {
+      throw new ForbiddenException({
+        code: 'DOCTOR_HOSPITAL_UNASSIGNED',
+        message: 'Doctor is not assigned to a hospital.',
+      });
+    }
+
+    this.assertHospitalAccess(hospitalId, actor);
+
     if (dto.departmentId) {
       const department = await this.prisma.department.findFirst({
         where: {
           id: dto.departmentId,
-          hospitalId: doctor.user.hospitalId ?? undefined,
+          hospitalId,
           isActive: true,
         },
       });
@@ -349,15 +421,34 @@ export class DoctorsService {
     });
   }
 
-  async updateStatus(id: string, isActive: boolean) {
+  async updateStatus(id: string, isActive: boolean, actor: DoctorActor) {
     const doctor = await this.prisma.doctor.findUnique({
       where: { id },
-      select: { id: true, userId: true },
+      select: {
+        id: true,
+        userId: true,
+        user: {
+          select: {
+            hospitalId: true,
+          },
+        },
+      },
     });
 
     if (!doctor) {
       throw new NotFoundException('Doctor not found');
     }
+
+    const hospitalId = doctor.user.hospitalId;
+
+    if (!hospitalId) {
+      throw new ForbiddenException({
+        code: 'DOCTOR_HOSPITAL_UNASSIGNED',
+        message: 'Doctor is not assigned to a hospital.',
+      });
+    }
+
+    this.assertHospitalAccess(hospitalId, actor);
 
     return this.prisma.user.update({
       where: { id: doctor.userId },
@@ -371,5 +462,20 @@ export class DoctorsService {
         isActive: true,
       },
     });
+  }
+
+  private assertHospitalAccess(
+    hospitalId: string,
+    actor: DoctorActor
+  ): void {
+    if (
+      actor.role === 'HOSPITAL_ADMIN' &&
+      actor.hospitalId !== hospitalId
+    ) {
+      throw new ForbiddenException({
+        code: 'HOSPITAL_ACCESS_DENIED',
+        message: 'You cannot manage doctors from another hospital.'
+      });
+    }
   }
 }

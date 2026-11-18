@@ -48,6 +48,7 @@ export class PharmacyController {
     @Body() dto: UpdateMedicineDto,
   ) {
     return this.pharmacyService.updateMedicine(
+      req.user.userId,
       req.user.hospitalId,
       id,
       dto,
@@ -96,5 +97,20 @@ export class PharmacyController {
       req.user.hospitalId,
       id,
     );
+  }
+
+  @Get('prescriptions/active')
+  @Roles('PHARMACIST', 'HOSPITAL_ADMIN')
+  async getActivePrescriptions(@Req() req: any) {
+    const prescriptions =
+      await this.pharmacyService.findActivePrescriptions(
+        req.user.hospitalId!,
+      );
+
+    return {
+      success: true,
+      data: prescriptions,
+      message: 'Active prescriptions retrieved successfully',
+    };
   }
 }

@@ -160,22 +160,57 @@ export class LaboratoryService {
     });
   }
 
-  async findLabTests(userId: string) {
+  // async findLabTests(userId: string) {
+  //   const user = await this.prisma.user.findUnique({
+  //     where: { id: userId },
+  //     select: { hospitalId: true },
+  //   });
+
+  //   if (!user?.hospitalId) {
+  //     throw new ForbiddenException('Hospital association required');
+  //   }
+
+  //   return this.prisma.labTest.findMany({
+  //     where: {
+  //       hospitalId: user.hospitalId,
+  //       isActive: true,
+  //     },
+  //     orderBy: { name: 'asc' },
+  //   });
+  // }
+  async findLabTests(userId: string, role: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { hospitalId: true },
+      select: {
+        id: true,
+        role: true,
+        hospitalId: true,
+        isActive: true,
+      },
     });
 
-    if (!user?.hospitalId) {
-      throw new ForbiddenException('Hospital association required');
+    if (
+      !user ||
+      !user.isActive ||
+      user.role !== role ||
+      !user.hospitalId
+    ) {
+      throw new ForbiddenException('Valid hospital staff account required');
     }
 
     return this.prisma.labTest.findMany({
       where: {
         hospitalId: user.hospitalId,
-        isActive: true,
+
+        // Hospital Admin sees all tests.
+        // Other staff see only active tests.
+        ...(role !== 'HOSPITAL_ADMIN' && {
+          isActive: true,
+        }),
       },
-      orderBy: { name: 'asc' },
+      orderBy: {
+        name: 'asc',
+      },
     });
   }
 
@@ -489,5 +524,163 @@ export class LaboratoryService {
       },
       orderBy: { completedAt: 'desc' },
     });
+  }
+
+  // --------------------------------------------------
+  // HOSPITAL ADMIN: LABORATORY DASHBOARD
+  // --------------------------------------------------
+
+  async getAdminDashboard(userId: string) {
+    // Get the logged-in Hospital Admin.
+    const admin = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        role: true,
+        hospitalId: true,
+        isActive: true,
+      },
+    });
+
+    if (
+      !admin ||
+      admin.role !== 'HOSPITAL_ADMIN' ||
+      !admin.isActive ||
+      !admin.hospitalId
+    ) {
+      throw new ForbiddenException(
+        'Valid Hospital Admin account required',
+      );
+    }
+
+    const hospitalId = admin.hospitalId;
+
+    // Hospital-specific laboratory test filter.
+    const labTestWhere = {
+      hospitalId,
+    };
+
+    // Hospital-specific laboratory order filter.
+    const labOrderWhere = {
+      medicalRecord: {
+        hospitalId,
+      },
+      labTest: {
+        hospitalId,
+      },
+    };
+
+    const [
+      totalTests,
+      activeTests,
+      inactiveTests,
+      totalOrders,
+      ordered,
+      sampleCollected,
+      processing,
+      resultUploaded,
+      approved,
+      rejected,
+      cancelled,
+      completed,
+    ] = await Promise.all([
+      this.prisma.labTest.count({
+        where: labTestWhere,
+      }),
+
+      this.prisma.labTest.count({
+        where: {
+          ...labTestWhere,
+          isActive: true,
+        },
+      }),
+
+      this.prisma.labTest.count({
+        where: {
+          ...labTestWhere,
+          isActive: false,
+        },
+      }),
+
+      this.prisma.labOrder.count({
+        where: labOrderWhere,
+      }),
+
+      this.prisma.labOrder.count({
+        where: {
+          ...labOrderWhere,
+          status: 'ORDERED',
+        },
+      }),
+
+      this.prisma.labOrder.count({
+        where: {
+          ...labOrderWhere,
+          status: 'SAMPLE_COLLECTED',
+        },
+      }),
+
+      this.prisma.labOrder.count({
+        where: {
+          ...labOrderWhere,
+          status: 'PROCESSING',
+        },
+      }),
+
+      this.prisma.labOrder.count({
+        where: {
+          ...labOrderWhere,
+          status: 'RESULT_UPLOADED',
+        },
+      }),
+
+      this.prisma.labOrder.count({
+        where: {
+          ...labOrderWhere,
+          status: 'APPROVED',
+        },
+      }),
+
+      this.prisma.labOrder.count({
+        where: {
+          ...labOrderWhere,
+          status: 'REJECTED',
+        },
+      }),
+
+      this.prisma.labOrder.count({
+        where: {
+          ...labOrderWhere,
+          status: 'CANCELLED',
+        },
+      }),
+
+      this.prisma.labOrder.count({
+        where: {
+          ...labOrderWhere,
+          status: 'COMPLETED',
+        },
+      }),
+    ]);
+
+    return {
+      tests: {
+        total: totalTests,
+        active: activeTests,
+        inactive: inactiveTests,
+      },
+
+      orders: {
+        total: totalOrders,
+        ordered,
+        sampleCollected,
+        processing,
+        resultUploaded,
+        approved,
+        rejected,
+        cancelled,
+        completed,
+      },
+    };
   }
 }

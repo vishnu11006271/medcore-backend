@@ -176,3 +176,8 @@ export type PharmacyDispenseItem = Prisma.PharmacyDispenseItemModel
  * 
  */
 export type PharmacyBatchAllocation = Prisma.PharmacyBatchAllocationModel
+/**
+ * Model RazorpayWebhookEvent
+ * 
+ */
+export type RazorpayWebhookEvent = Prisma.RazorpayWebhookEventModel

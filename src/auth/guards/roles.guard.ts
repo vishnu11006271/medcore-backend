@@ -17,7 +17,6 @@ export class RolesGuard implements CanActivate {
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
-    console.log(requiredRoles);
 
     // Routes without @Roles() need only their other guards.
     if (!requiredRoles || requiredRoles.length === 0) {
@@ -26,7 +25,6 @@ export class RolesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user as { role?: string } | undefined;
-    console.log(user);
 
     if (!user || !requiredRoles.includes(user.role ?? '')) {
       throw new ForbiddenException({

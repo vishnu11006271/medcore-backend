@@ -10,6 +10,10 @@ import {
 } from 'class-validator';
 
 export class CreateAppointmentDto {
+
+  @IsUUID()
+  hospitalId!: string;
+  
   @IsUUID()
   doctorId!: string;
 
