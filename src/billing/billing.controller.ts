@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 
 import { BillingService } from './billing.service.js';
@@ -19,11 +20,13 @@ import { VerifyRazorpayPaymentDto } from './dto/verify-razorpay-payment.dto.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+import type { Response } from 'express';
+import { InvoicePdfService } from './invoice-pdf.service.js';
 
 @Controller('billing')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class BillingController {
-  constructor(private readonly billingService: BillingService) {}
+  constructor(private readonly billingService: BillingService, private readonly invoicePdfService: InvoicePdfService) {}
 
   // Create invoice
   @Post('invoices')
@@ -68,6 +71,30 @@ export class BillingController {
       data: result,
       message: 'Invoice fetched successfully',
     };
+  }
+
+  // Generate invoice PDF
+  @Get('invoices/:id/pdf')
+  @Roles('HOSPITAL_ADMIN', 'RECEPTIONIST', 'ACCOUNTANT')
+  async generateInvoicePdf(
+    @Param('id') id: string,
+    @Req() req: any,
+    @Res() res: Response,
+  ) {
+    const invoice = await this.billingService.getInvoiceById(
+      id,
+      req.user,
+    );
+
+    const pdfBuffer = await this.invoicePdfService.generate(invoice);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `inline; filename="invoice-${invoice.invoiceNumber}.pdf"`,
+      'Content-Length': pdfBuffer.length,
+    });
+
+    res.end(pdfBuffer);
   }
 
   // Issue invoice

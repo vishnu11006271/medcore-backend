@@ -298,6 +298,25 @@ export class BillingService {
             },
           },
         },
+        hospital: {
+          select: {
+            name: true,
+            email: true,
+            phone: true,
+            address: true,
+            registrationNumber: true,
+          },
+        },
+        payments: {
+          where: {
+            status: {
+              in: ['SUCCESS', 'PARTIALLY_REFUNDED', 'REFUNDED'],
+            },
+          },
+          orderBy: {
+            paidAt: 'asc',
+          },
+        },
       },
     });
 
@@ -1331,6 +1350,258 @@ export class BillingService {
 //     message: 'Abandoned payment order reconciled',
 //   };
 // }
+
+  async handleRazorpayWebhook(
+    rawBody: Buffer,
+    signature: string,
+    eventId: string,
+  ) {
+    const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
+
+    if (!webhookSecret) {
+      throw new InternalServerErrorException(
+        'Razorpay webhook secret is not configured',
+      );
+    }
+
+    // 1. Verify the webhook signature against the original raw body.
+    const expectedSignature = createHmac('sha256', webhookSecret)
+      .update(rawBody)
+      .digest('hex');
+
+    if (!/^[a-fA-F0-9]{64}$/.test(signature)) {
+      throw new BadRequestException('Invalid webhook signature format');
+    }
+
+    const expected = Buffer.from(expectedSignature, 'hex');
+    const received = Buffer.from(signature, 'hex');
+
+    if (
+      expected.length !== received.length ||
+      !timingSafeEqual(expected, received)
+    ) {
+      throw new BadRequestException('Invalid Razorpay webhook signature');
+    }
+
+    // 2. Parse the payload only after signature verification.
+    let payload: any;
+
+    try {
+      payload = JSON.parse(rawBody.toString('utf8'));
+    } catch {
+      throw new BadRequestException('Invalid webhook JSON payload');
+    }
+
+    const eventType = payload.event;
+
+    if (!eventType) {
+      throw new BadRequestException('Webhook event type is missing');
+    }
+
+    const gatewayPayment = payload.payload?.payment?.entity;
+    const gatewayOrder = payload.payload?.order?.entity;
+
+    const gatewayPaymentId = gatewayPayment?.id ?? null;
+    const gatewayOrderId =
+      gatewayPayment?.order_id ?? gatewayOrder?.id ?? null;
+
+    try {
+      return await this.prisma.$transaction(
+        async (tx) => {
+          // 3. Store the event. The unique eventId prevents duplicates.
+          const webhookEvent = await tx.razorpayWebhookEvent.create({
+            data: {
+              eventId,
+              eventType,
+              paymentId: gatewayPaymentId,
+              orderId: gatewayOrderId,
+              payload,
+            },
+          });
+
+          // 4. Process captured payments.
+          if (eventType === 'payment.captured') {
+            if (!gatewayPaymentId || !gatewayOrderId) {
+              throw new BadRequestException(
+                'Captured event is missing payment or order ID',
+              );
+            }
+
+            const payment = await tx.payment.findFirst({
+              where: {
+                provider: 'RAZORPAY',
+                providerOrderId: gatewayOrderId,
+              },
+              include: {
+                invoice: true,
+              },
+            });
+
+            if (!payment) {
+              throw new NotFoundException(
+                'Matching Razorpay order was not found',
+              );
+            }
+
+            if (
+              gatewayPayment.amount !== this.toCents(payment.amount) ||
+              gatewayPayment.currency !== payment.currency
+            ) {
+              throw new BadRequestException(
+                'Gateway payment amount or currency does not match',
+              );
+            }
+
+            if (payment.status === 'SUCCESS') {
+              if (payment.providerPaymentId !== gatewayPaymentId) {
+                throw new ConflictException(
+                  'Order was completed with another payment',
+                );
+              }
+            } else {
+              if (payment.status !== 'PENDING') {
+                throw new ConflictException(
+                  'Local payment is no longer pending',
+                );
+              }
+
+              await tx.payment.update({
+                where: { id: payment.id },
+                data: {
+                  status: 'SUCCESS',
+                  providerPaymentId: gatewayPaymentId,
+                  method: 'OTHER',
+                  paidAt: new Date(),
+                  failureReason: null,
+                },
+              });
+
+              const successfulPayments = await tx.payment.findMany({
+                where: {
+                  invoiceId: payment.invoiceId,
+                  status: {
+                    in: [
+                      'SUCCESS',
+                      'PARTIALLY_REFUNDED',
+                      'REFUNDED',
+                    ],
+                  },
+                },
+                select: {
+                  amount: true,
+                  refundAmount: true,
+                  status: true,
+                },
+              });
+
+              const { netPaidCents } =
+                this.calculatePaymentTotals(successfulPayments);
+
+              const invoiceTotalCents = this.toCents(
+                payment.invoice.total,
+              );
+
+              await tx.invoice.update({
+                where: { id: payment.invoiceId },
+                data: {
+                  status:
+                    netPaidCents >= invoiceTotalCents
+                      ? 'PAID'
+                      : 'PARTIALLY_PAID',
+                },
+              });
+            }
+          }
+
+          
+          // Handle failed Razorpay payment attempts.
+          if (eventType === 'payment.failed') {
+            if (!gatewayPaymentId || !gatewayOrderId) {
+              throw new BadRequestException(
+                'Failed event is missing payment or order ID',
+              );
+            }
+
+            const payment = await tx.payment.findFirst({
+              where: {
+                provider: 'RAZORPAY',
+                providerOrderId: gatewayOrderId,
+              },
+            });
+
+            if (!payment) {
+              throw new NotFoundException(
+                'Matching Razorpay order was not found',
+              );
+            }
+
+            // Never overwrite an already successful payment.
+            if (payment.status === 'SUCCESS') {
+              // Keep the existing successful payment unchanged.
+            } else if (payment.status === 'PENDING') {
+              // Check whether another attempt for this order
+              // is captured or authorised at Razorpay.
+              const razorpay = this.getRazorpayClient();
+
+              const gatewayPayments =
+                await razorpay.orders.fetchPayments(gatewayOrderId);
+
+              const activeAttempt = gatewayPayments.items.some(
+                (item: any) =>
+                  item.status === 'captured' ||
+                  item.status === 'authorized',
+              );
+
+              if (!activeAttempt) {
+                await tx.payment.updateMany({
+                  where: {
+                    id: payment.id,
+                    status: 'PENDING',
+                  },
+                  data: {
+                    status: 'FAILED',
+                    failureReason:
+                      gatewayPayment.error_description ||
+                      gatewayPayment.error_reason ||
+                      'Razorpay payment failed',
+                  },
+                });
+              }
+            }
+          }
+
+          await tx.razorpayWebhookEvent.update({
+            where: { id: webhookEvent.id },
+            data: {
+              processed: true,
+              processedAt: new Date(),
+              errorMessage: null,
+            },
+          });
+
+          return {
+            received: true,
+            processed: true,
+            event: eventType,
+          };
+        },
+        {
+          isolationLevel: 'Serializable',
+        },
+      );
+    } catch (error: any) {
+      // A repeated event ID is an already-received webhook.
+      if (error?.code === 'P2002') {
+        return {
+          received: true,
+          processed: true,
+          duplicate: true,
+        };
+      }
+
+      throw error;
+    }
+  }
 
 
 }
