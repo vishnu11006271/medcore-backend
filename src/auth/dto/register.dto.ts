@@ -33,7 +33,4 @@ export class RegisterDto {
   @MaxLength(254)
   role?: UserRole;
 
-  @IsOptional()
-  @IsUUID()
-  hospitalId?: string;
 }
