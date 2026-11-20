@@ -171,20 +171,33 @@ export class AppointmentsService {
         throw new ForbiddenException('A registered patient profile is required');
       }
 
-      if (currentPatient.hospitalId && currentPatient.hospitalId !== dto.hospitalId) {
+      const currentUser = await tx.user.findUnique({
+        where: { id: userId },
+        select: { hospitalId: true },
+      });
+
+      if (
+        (currentPatient.hospitalId && currentPatient.hospitalId !== dto.hospitalId) ||
+        (currentUser?.hospitalId && currentUser.hospitalId !== dto.hospitalId)
+      ) {
         throw new ConflictException(
           'Your patient profile is already associated with another hospital.',
         );
       }
 
-      if (!currentPatient.hospitalId) {
-        const patientNumber = `PAT-${randomUUID()}`;
+      if (!currentPatient.hospitalId || !currentPatient.patientNumber) {
         await tx.patient.update({
           where: { id: currentPatient.id },
-          data: { hospitalId: dto.hospitalId, patientNumber },
+          data: {
+            hospitalId: dto.hospitalId,
+            patientNumber: currentPatient.patientNumber ?? `PAT-${randomUUID()}`,
+          },
         });
-        await tx.user.updateMany({
-          where: { id: userId, hospitalId: null },
+      }
+
+      if (!currentUser?.hospitalId) {
+        await tx.user.update({
+          where: { id: userId },
           data: { hospitalId: dto.hospitalId },
         });
       }
