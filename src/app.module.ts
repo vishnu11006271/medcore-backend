@@ -21,6 +21,7 @@ import { MailModule } from './mail/mail.module.js';
 import { HospitalDashboardModule } from './hospital-dashboard/hospital-dashboard.module.js';
 import { UsersModule } from './users/users.module.js';
 import { PlatformAnalyticsModule } from './platform-analytics/platform-analytics.module.js';
+import { StaffModule } from './staff/staff.module.js';
 
 @Module({
   imports: [
@@ -43,7 +44,8 @@ import { PlatformAnalyticsModule } from './platform-analytics/platform-analytics
     MailModule,
     HospitalDashboardModule,
     UsersModule,
-    PlatformAnalyticsModule],
+    PlatformAnalyticsModule,
+    StaffModule],
   controllers: [AppController, PatientAllergiesController],
   providers: [AppService, PatientAllergiesService],
 })
