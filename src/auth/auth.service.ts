@@ -16,7 +16,6 @@ import { randomInt } from 'crypto';
 import { RegisterDto } from './dto/register.dto.js';
 import { VerifyEmailDto } from './dto/verify-email.dto.js';
 import { createHash, randomBytes } from 'crypto';
-import { randomUUID } from 'node:crypto';
 import { UserRole } from '../generated/prisma/enums.js';
 import { MailService } from '../mail/mail.service.js';
 import { ResendVerificationOtpDto } from './dto/resend-verification-otp.dto.js';
