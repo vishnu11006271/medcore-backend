@@ -609,10 +609,12 @@ export type HospitalCreateNestedOneWithoutPatientsInput = {
   connect?: Prisma.HospitalWhereUniqueInput
 }
 
-export type HospitalUpdateOneRequiredWithoutPatientsNestedInput = {
+export type HospitalUpdateOneWithoutPatientsNestedInput = {
   create?: Prisma.XOR<Prisma.HospitalCreateWithoutPatientsInput, Prisma.HospitalUncheckedCreateWithoutPatientsInput>
   connectOrCreate?: Prisma.HospitalCreateOrConnectWithoutPatientsInput
   upsert?: Prisma.HospitalUpsertWithoutPatientsInput
+  disconnect?: Prisma.HospitalWhereInput | boolean
+  delete?: Prisma.HospitalWhereInput | boolean
   connect?: Prisma.HospitalWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.HospitalUpdateToOneWithWhereWithoutPatientsInput, Prisma.HospitalUpdateWithoutPatientsInput>, Prisma.HospitalUncheckedUpdateWithoutPatientsInput>
 }
