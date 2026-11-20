@@ -711,10 +711,15 @@ export class AppointmentsService {
     );
 
     return patients
-      .map((patient) => ({
-        ...patient,
-        ...visitsByPatientId.get(patient.id),
-      }))
+      .map((patient) => {
+        const visitSummary = visitsByPatientId.get(patient.id);
+
+        return {
+          ...patient,
+          appointmentCount: visitSummary?.appointmentCount ?? 0,
+          lastAppointmentAt: visitSummary?.lastAppointmentAt ?? null,
+        };
+      })
       .sort((a, b) => {
         const aDate = a.lastAppointmentAt?.getTime() ?? 0;
         const bDate = b.lastAppointmentAt?.getTime() ?? 0;
