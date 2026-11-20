@@ -202,4 +202,23 @@ export class AppointmentsController {
     };
   }
 
+
+  @Get('doctor/my-patients/:patientId')
+  @Roles('DOCTOR')
+  async getDoctorPatientDetails(
+    @Req() req: AuthenticatedRequest,
+    @Param('patientId') patientId: string,
+  ) {
+    const data = await this.appointmentsService.getDoctorPatientDetails(
+      req.user.userId,
+      patientId,
+    );
+
+    return {
+      success: true,
+      data,
+      message: 'Doctor patient details retrieved successfully',
+    };
+  }
+
 }
