@@ -707,7 +707,7 @@ export class AppointmentsService {
           appointmentCount: visit._count._all,
           lastAppointmentAt: visit._max.scheduledAt,
         },
-      ]),
+      ] as const),
     );
 
     return patients
