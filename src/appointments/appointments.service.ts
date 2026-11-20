@@ -727,4 +727,69 @@ export class AppointmentsService {
       });
   }
 
+
+  async getDoctorPatientDetails(userId: string, patientId: string) {
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (!doctor) {
+      throw new ForbiddenException(
+        'A registered doctor profile is required to view patients',
+      );
+    }
+
+    const patient = await this.prisma.patient.findFirst({
+      where: {
+        id: patientId,
+        appointments: {
+          some: { doctorId: doctor.id },
+        },
+      },
+      select: {
+        id: true,
+        patientNumber: true,
+        dateOfBirth: true,
+        gender: true,
+        bloodGroup: true,
+        address: true,
+        emergencyContact: true,
+        createdAt: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+          },
+        },
+        appointments: {
+          where: { doctorId: doctor.id },
+          orderBy: { scheduledAt: 'desc' },
+          select: {
+            id: true,
+            scheduledAt: true,
+            durationMinutes: true,
+            status: true,
+            reason: true,
+            notes: true,
+            department: {
+              select: { name: true },
+            },
+            hospital: {
+              select: { name: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!patient) {
+      throw new NotFoundException('Patient not found for this doctor');
+    }
+
+    return patient;
+  }
+
 }
