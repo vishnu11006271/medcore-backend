@@ -107,7 +107,7 @@ export class AuthController {
     res.cookie('medcore_refresh', refreshToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
-      sameSite: 'none',
+      sameSite: this.configService.get('NODE_ENV') === 'production' ? 'none' : 'lax',
       path: '/auth',
       expires: refreshTokenExpiresAt,
     });
@@ -146,7 +146,7 @@ export class AuthController {
     res.cookie('medcore_refresh', result.refreshToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
-      sameSite: 'none',
+      sameSite: this.configService.get('NODE_ENV') === 'production' ? 'none' : 'lax',
       path: '/auth',
       expires: result.refreshTokenExpiresAt,
     });
@@ -178,7 +178,7 @@ export class AuthController {
     res.clearCookie('medcore_refresh', {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
-      sameSite: 'none',
+      sameSite: this.configService.get('NODE_ENV') === 'production' ? 'none' : 'lax',
       path: '/auth',
     });
 

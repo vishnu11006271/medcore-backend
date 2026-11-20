@@ -3,7 +3,6 @@ import {
   IsEmail,
   IsOptional,
   IsString,
-  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -33,7 +32,4 @@ export class RegisterDto {
   @MaxLength(254)
   role?: UserRole;
 
-  @IsOptional()
-  @IsUUID()
-  hospitalId?: string;
 }

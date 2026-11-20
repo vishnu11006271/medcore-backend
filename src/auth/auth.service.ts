@@ -16,7 +16,6 @@ import { randomInt } from 'crypto';
 import { RegisterDto } from './dto/register.dto.js';
 import { VerifyEmailDto } from './dto/verify-email.dto.js';
 import { createHash, randomBytes } from 'crypto';
-import { randomUUID } from 'node:crypto';
 import { UserRole } from '../generated/prisma/enums.js';
 import { MailService } from '../mail/mail.service.js';
 import { ResendVerificationOtpDto } from './dto/resend-verification-otp.dto.js';
@@ -277,66 +276,24 @@ export class AuthService {
       });
     }
 
-    const role = UserRole.PATIENT;
-
-    // const role = dto.role ?? UserRole.PATIENT;
-
-    // Prevent public registration into privileged roles.
-    const allowedPublicRoles: UserRole[] = [
-      UserRole.PATIENT,
-      UserRole.DOCTOR,
-      UserRole.NURSE,
-      UserRole.RECEPTIONIST,
-      UserRole.LAB_TECHNICIAN,
-      UserRole.PHARMACIST,
-      UserRole.ACCOUNTANT,
-      UserRole.HOSPITAL_ADMIN,
-    ];
-
-    if (!allowedPublicRoles.includes(role)) {
-      throw new BadRequestException({
-        code: 'INVALID_ROLE',
-        message: 'The selected role cannot be registered through this endpoint.',
-      });
-    }
-
     const passwordHash = await bcrypt.hash(dto.password, 12);
-
-    // Generate a six-digit OTP.
     const otp = randomInt(100000, 1000000).toString();
     const codeHash = await bcrypt.hash(otp, 10);
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // Create user, patient profile and OTP in one transaction.
+    // A patient profile exists independently of any hospital.
+    // Hospital association and patient number are assigned atomically
+    // when the patient books their first appointment.
     const result = await this.prisma.$transaction(async (tx) => {
-      let hospital: { id: string; status: string } | null = null;
-
-      if (dto.hospitalId) {
-        hospital = await tx.hospital.findUnique({
-          where: { id: dto.hospitalId },
-          select: {
-            id: true,
-            status: true,
-          },
-        });
-
-        if (!hospital || hospital.status !== 'VERIFIED') {
-          throw new BadRequestException({
-            code: 'INVALID_HOSPITAL',
-            message: 'Please select a valid, verified hospital.',
-          });
-        }
-      }
-
       const user = await tx.user.create({
         data: {
           email,
           firstName: dto.firstName.trim(),
           lastName: dto.lastName.trim(),
           passwordHash,
-          role,
+          role: UserRole.PATIENT,
           isActive: true,
-          hospitalId: hospital?.id ?? null,
+          hospitalId: null,
         },
         select: {
           id: true,
@@ -348,21 +305,15 @@ export class AuthService {
         },
       });
 
-      let patientId: string | undefined;
+      const patient = await tx.patient.create({
+        data: {
+          userId: user.id,
+          hospitalId: null,
+          patientNumber: null,
+        },
+        select: { id: true },
+      });
 
-      if (role === UserRole.PATIENT && hospital) {
-        const patient = await tx.patient.create({
-          data: {
-            userId: user.id,
-            hospitalId: hospital.id,
-            patientNumber: `PAT-${randomUUID()}`,
-          },
-        });
-
-        patientId = patient.id;
-      }
-
-      // Save OTP and retain its ID for delivery-failure handling.
       const emailOtp = await tx.emailOtp.create({
         data: {
           userId: user.id,
@@ -376,13 +327,12 @@ export class AuthService {
       return {
         user: {
           ...user,
-          patientId,
+          patientId: patient.id,
         },
         emailOtpId: emailOtp.id,
       };
     });
 
-    // Send verification email after the transaction commits.
     try {
       await this.mailService.sendVerificationOtp(
         email,
@@ -390,17 +340,13 @@ export class AuthService {
         otp,
       );
     } catch (error) {
-      // Invalidate the OTP if Gmail delivery fails.
       await this.prisma.emailOtp.updateMany({
         where: {
           id: result.emailOtpId,
           consumedAt: null,
         },
-        data: {
-          consumedAt: new Date(),
-        },
+        data: { consumedAt: new Date() },
       });
-
       throw error;
     }
 
