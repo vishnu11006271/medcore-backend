@@ -653,4 +653,143 @@ export class AppointmentsService {
     return appointments;
   }
 
+
+  async getDoctorPatients(userId: string) {
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (!doctor) {
+      throw new ForbiddenException(
+        'A registered doctor profile is required to view patients',
+      );
+    }
+
+    // Group appointments by patient so each patient appears only once.
+    // The doctorId is always resolved from the authenticated user.
+    const patientVisits = await this.prisma.appointment.groupBy({
+      by: ['patientId'],
+      where: { doctorId: doctor.id },
+      _count: { _all: true },
+      _max: { scheduledAt: true },
+    });
+
+    if (patientVisits.length === 0) {
+      return [];
+    }
+
+    const patients = await this.prisma.patient.findMany({
+      where: {
+        id: { in: patientVisits.map((visit) => visit.patientId) },
+      },
+      select: {
+        id: true,
+        patientNumber: true,
+        dateOfBirth: true,
+        gender: true,
+        bloodGroup: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
+
+    const visitsByPatientId = new Map(
+      patientVisits.map((visit) => [
+        visit.patientId,
+        {
+          appointmentCount: visit._count._all,
+          lastAppointmentAt: visit._max.scheduledAt,
+        },
+      ] as const),
+    );
+
+    return patients
+      .map((patient) => {
+        const visitSummary = visitsByPatientId.get(patient.id);
+
+        return {
+          ...patient,
+          appointmentCount: visitSummary?.appointmentCount ?? 0,
+          lastAppointmentAt: visitSummary?.lastAppointmentAt ?? null,
+        };
+      })
+      .sort((a, b) => {
+        const aDate = a.lastAppointmentAt?.getTime() ?? 0;
+        const bDate = b.lastAppointmentAt?.getTime() ?? 0;
+        return bDate - aDate;
+      });
+  }
+
+
+  async getDoctorPatientDetails(userId: string, patientId: string) {
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (!doctor) {
+      throw new ForbiddenException(
+        'A registered doctor profile is required to view patients',
+      );
+    }
+
+    const patient = await this.prisma.patient.findFirst({
+      where: {
+        id: patientId,
+        appointments: {
+          some: { doctorId: doctor.id },
+        },
+      },
+      select: {
+        id: true,
+        patientNumber: true,
+        dateOfBirth: true,
+        gender: true,
+        bloodGroup: true,
+        address: true,
+        emergencyContact: true,
+        createdAt: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+          },
+        },
+        appointments: {
+          where: { doctorId: doctor.id },
+          orderBy: { scheduledAt: 'desc' },
+          select: {
+            id: true,
+            scheduledAt: true,
+            durationMinutes: true,
+            status: true,
+            reason: true,
+            notes: true,
+            department: {
+              select: { name: true },
+            },
+            hospital: {
+              select: { name: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!patient) {
+      throw new NotFoundException('Patient not found for this doctor');
+    }
+
+    return patient;
+  }
+
 }

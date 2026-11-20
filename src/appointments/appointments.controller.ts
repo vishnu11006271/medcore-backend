@@ -187,4 +187,38 @@ export class AppointmentsController {
       message: 'Doctor appointments retrieved successfully',
     };
   }
+
+  @Get('doctor/my-patients')
+  @Roles('DOCTOR')
+  async getDoctorPatients(@Req() req: AuthenticatedRequest) {
+    const data = await this.appointmentsService.getDoctorPatients(
+      req.user.userId,
+    );
+
+    return {
+      success: true,
+      data,
+      message: 'Doctor patients retrieved successfully',
+    };
+  }
+
+
+  @Get('doctor/my-patients/:patientId')
+  @Roles('DOCTOR')
+  async getDoctorPatientDetails(
+    @Req() req: AuthenticatedRequest,
+    @Param('patientId') patientId: string,
+  ) {
+    const data = await this.appointmentsService.getDoctorPatientDetails(
+      req.user.userId,
+      patientId,
+    );
+
+    return {
+      success: true,
+      data,
+      message: 'Doctor patient details retrieved successfully',
+    };
+  }
+
 }
