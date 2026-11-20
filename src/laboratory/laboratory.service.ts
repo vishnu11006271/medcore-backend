@@ -505,6 +505,10 @@ export class LaboratoryService {
       throw new NotFoundException('Patient profile not found');
     }
 
+    if (!patient.hospitalId) {
+      return [];
+    }
+
     return this.prisma.labOrder.findMany({
       where: {
         status: 'APPROVED',
