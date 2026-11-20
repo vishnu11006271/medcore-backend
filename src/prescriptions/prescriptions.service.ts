@@ -216,6 +216,10 @@ export class PrescriptionsService {
       );
     }
 
+    if (!patient.hospitalId) {
+      return [];
+    }
+
     return this.prisma.prescription.findMany({
       where: {
         medicalRecord: {
