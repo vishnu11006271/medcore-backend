@@ -349,6 +349,18 @@ export class MedicalRecordsService {
         );
     }
 
+    if (!patient.hospitalId) {
+        return {
+        data: [],
+        meta: {
+            page,
+            limit,
+            total: 0,
+            totalPages: 0,
+        },
+        };
+    }
+
     // 2. Calculate pagination.
     const skip = (page - 1) * limit;
 
