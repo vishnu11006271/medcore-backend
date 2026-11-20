@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateAppointmentDto } from './dto/create-appointment.dto.js';
+import { randomUUID } from 'node:crypto';
 
 const BLOCKING_STATUSES = [
   'PENDING',
@@ -149,6 +150,43 @@ export class AppointmentsService {
         throw new BadRequestException(
           'The doctor does not belong to the selected hospital',
         );
+      }
+
+      // Serialize first-time hospital assignment per patient so concurrent
+      // bookings at two hospitals cannot silently reassign the patient.
+      const lockedPatient = await tx.$queryRaw<Array<{ id: string }>>`
+        SELECT "id" FROM "Patient" WHERE "id" = ${patient.id} FOR UPDATE
+      `;
+
+      if (lockedPatient.length === 0) {
+        throw new ForbiddenException('A registered patient profile is required');
+      }
+
+      const currentPatient = await tx.patient.findUnique({
+        where: { id: patient.id },
+        select: { id: true, hospitalId: true, patientNumber: true },
+      });
+
+      if (!currentPatient) {
+        throw new ForbiddenException('A registered patient profile is required');
+      }
+
+      if (currentPatient.hospitalId && currentPatient.hospitalId !== dto.hospitalId) {
+        throw new ConflictException(
+          'Your patient profile is already associated with another hospital.',
+        );
+      }
+
+      if (!currentPatient.hospitalId) {
+        const patientNumber = `PAT-${randomUUID()}`;
+        await tx.patient.update({
+          where: { id: currentPatient.id },
+          data: { hospitalId: dto.hospitalId, patientNumber },
+        });
+        await tx.user.updateMany({
+          where: { id: userId, hospitalId: null },
+          data: { hospitalId: dto.hospitalId },
+        });
       }
 
       const availability = await tx.doctorAvailability.findMany({
