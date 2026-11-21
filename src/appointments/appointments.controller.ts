@@ -28,6 +28,8 @@ type AuthenticatedRequest = Request & {
 @Controller('appointments')
 @ApiTags('Appointments')
 @ApiBearerAuth('access-token')
+@ApiTags('Appointments')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class AppointmentsController {
   constructor(
