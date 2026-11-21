@@ -1,4 +1,4 @@
-import { ApiTags, ApiCookieAuth } from '@nestjs/swagger';
+import { ApiTags, ApiCookieAuth, ApiBearerAuth } from '@nestjs/swagger';
 
 import {
   Body,
