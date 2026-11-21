@@ -1,3 +1,4 @@
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import {
   Controller,
   Get,
@@ -11,6 +12,8 @@ import { RolesGuard } from '../auth/guards/roles.guard.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 
 @Controller('platform-analytics')
+@ApiTags('Platform Analytics')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('SUPER_ADMIN')
 export class PlatformAnalyticsController {
