@@ -13,6 +13,7 @@ import { RegisterHospitalDto } from './dto/register-hospital.dto.js';
 
 @Controller('hospitals')
 @ApiTags('Hospital Registration')
+@ApiTags('Hospital Registration')
 export class HospitalRegistrationController {
   constructor(
     private readonly hospitalsService: HospitalsService,
