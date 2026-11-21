@@ -24,6 +24,8 @@ type AuthenticatedRequest = Request & {
 @Controller('hospital-dashboard')
 @ApiTags('Hospital Dashboard')
 @ApiBearerAuth('access-token')
+@ApiTags('Hospital Dashboard')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('HOSPITAL_ADMIN')
 export class HospitalDashboardController {
