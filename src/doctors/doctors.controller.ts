@@ -1,3 +1,4 @@
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -28,6 +29,8 @@ interface AuthenticatedRequest extends Request {
 }
 
 @Controller()
+@ApiTags('Doctors')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('SUPER_ADMIN', 'HOSPITAL_ADMIN')
 export class DoctorsController {
