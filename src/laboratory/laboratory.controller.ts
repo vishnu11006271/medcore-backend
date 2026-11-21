@@ -1,3 +1,4 @@
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import {
   Body,
@@ -23,6 +24,8 @@ import { UploadLabResultDto } from './dto/upload-lab-result.dto.js';
 import { ApproveLabResultDto } from './dto/approve-lab-result.dto.js';
 
 @Controller('lab')
+@ApiTags('Laboratory')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class LaboratoryController {
   constructor(
