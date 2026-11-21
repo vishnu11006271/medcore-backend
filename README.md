@@ -4,7 +4,7 @@ Medcore HMS is a full-stack, multi-hospital management platform for coordinating
 
 ## Live application
 
-- **Frontend:** https://medcore-frontend-l1v3.vercel.app
+- **Frontend:** https://medcore-frontend-7uhi.vercel.app/
 - **Backend API:** https://medcore-api.duckdns.org
 - **Interactive API documentation:** `/api/docs` on the backend (available after the Swagger-enabled backend is deployed)
 - **Frontend source:** https://github.com/vishnu11006271/medcore-frontend
