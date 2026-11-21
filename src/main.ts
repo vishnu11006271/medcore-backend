@@ -53,6 +53,15 @@ async function bootstrap() {
         },
         'access-token',
       )
+      .addCookieAuth(
+        'medcore_refresh',
+        {
+          type: 'apiKey',
+          in: 'cookie',
+          description: 'HttpOnly refresh cookie set by login and refresh endpoints.',
+        },
+        'refresh-cookie',
+      )
       .build();
 
     const openApiDocument = SwaggerModule.createDocument(app, swaggerConfig);
