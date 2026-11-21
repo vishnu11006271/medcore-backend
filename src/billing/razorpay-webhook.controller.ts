@@ -15,6 +15,7 @@ import { BillingService } from './billing.service.js';
 
 @Controller('billing/webhooks')
 @ApiTags('Payment Webhooks')
+@ApiTags('Payment Webhooks')
 export class RazorpayWebhookController {
   constructor(
     private readonly billingService: BillingService,
