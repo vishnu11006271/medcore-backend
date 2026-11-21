@@ -13,10 +13,10 @@ async function bootstrap() {
 
   // Allow requests from our Angular frontend
   app.enableCors({
-    origin: [
-    'http://localhost:4200',
-    'https://medcore-frontend-7uhi.vercel.app'
-  ],
+    origin: (process.env.CORS_ORIGINS ?? 'http://localhost:4200,https://medcore-frontend-l1v3.vercel.app')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
