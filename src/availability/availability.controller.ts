@@ -28,6 +28,8 @@ interface AuthenticatedRequest extends Request {
 @Controller('doctors/:doctorId/availability')
 @ApiTags('Doctor Availability')
 @ApiBearerAuth('access-token')
+@ApiTags('Doctor Availability')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('SUPER_ADMIN', 'HOSPITAL_ADMIN')
 export class AvailabilityController {
