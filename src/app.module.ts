@@ -22,6 +22,7 @@ import { HospitalDashboardModule } from './hospital-dashboard/hospital-dashboard
 import { UsersModule } from './users/users.module.js';
 import { PlatformAnalyticsModule } from './platform-analytics/platform-analytics.module.js';
 import { StaffModule } from './staff/staff.module.js';
+import { NotificationsModule } from './notifications/notifications.module.js';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { StaffModule } from './staff/staff.module.js';
     HospitalDashboardModule,
     UsersModule,
     PlatformAnalyticsModule,
-    StaffModule],
+    StaffModule,
+    NotificationsModule],
   controllers: [AppController, PatientAllergiesController],
   providers: [AppService, PatientAllergiesService],
 })

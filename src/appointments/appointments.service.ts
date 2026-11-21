@@ -294,7 +294,7 @@ export class AppointmentsService {
         );
       }
 
-      return tx.appointment.create({
+      const appointment = await tx.appointment.create({
         data: {
           hospitalId: dto.hospitalId,
           patientId: patient.id,
@@ -306,6 +306,40 @@ export class AppointmentsService {
           reason: dto.reason,
         },
       });
+
+      const hospitalAdmins = await tx.user.findMany({
+        where: {
+          hospitalId: dto.hospitalId,
+          role: 'HOSPITAL_ADMIN',
+          isActive: true,
+        },
+        select: { id: true },
+      });
+
+      await tx.notification.createMany({
+        data: [
+          {
+            userId,
+            hospitalId: dto.hospitalId,
+            title: 'Appointment request submitted',
+            message: 'Your appointment request has been submitted successfully.',
+            linkedEntityType: 'APPOINTMENT',
+            linkedEntityId: appointment.id,
+          },
+          ...[doctor.userId, ...hospitalAdmins.map((admin) => admin.id)].map(
+            (recipientId) => ({
+              userId: recipientId,
+              hospitalId: dto.hospitalId,
+              title: 'New appointment request',
+              message: 'A patient has requested a new appointment.',
+              linkedEntityType: 'APPOINTMENT',
+              linkedEntityId: appointment.id,
+            }),
+          ),
+        ],
+      });
+
+      return appointment;
     });
 
     return result;
@@ -436,26 +470,70 @@ export class AppointmentsService {
       );
     }
 
-    // Conditional update prevents overwriting a status changed
-    // concurrently by another request.
-    const updateResult = await this.prisma.appointment.updateMany({
-      where: {
-        id: appointmentId,
-        status: appointment.status,
-      },
-      data: {
-        status: targetStatus,
-      },
-    });
+    // Update the appointment and create its notification records atomically.
+    return this.prisma.$transaction(async (tx) => {
+      const updateResult = await tx.appointment.updateMany({
+        where: {
+          id: appointmentId,
+          status: appointment.status,
+        },
+        data: {
+          status: targetStatus,
+        },
+      });
 
-    if (updateResult.count === 0) {
-      throw new ConflictException(
-        'The appointment status changed. Refresh and try again.',
-      );
-    }
+      if (updateResult.count === 0) {
+        throw new ConflictException(
+          'The appointment status changed. Refresh and try again.',
+        );
+      }
 
-    return this.prisma.appointment.findUnique({
-      where: { id: appointmentId },
+      const notificationTitle: Record<typeof action, string> = {
+        confirm: 'Appointment confirmed',
+        start: 'Appointment started',
+        complete: 'Appointment completed',
+        cancel: 'Appointment cancelled',
+      };
+
+      const notificationMessage: Record<typeof action, string> = {
+        confirm: 'Your appointment has been confirmed.',
+        start: 'Your appointment is now in progress.',
+        complete: 'Your appointment has been marked as completed.',
+        cancel: 'Your appointment has been cancelled.',
+      };
+
+      let recipients = [appointment.patient.userId];
+
+      if (action === 'cancel' && actorRole === 'PATIENT') {
+        const hospitalAdmins = await tx.user.findMany({
+          where: {
+            hospitalId: appointment.hospitalId,
+            role: 'HOSPITAL_ADMIN',
+            isActive: true,
+          },
+          select: { id: true },
+        });
+
+        recipients = [
+          appointment.doctor.userId,
+          ...hospitalAdmins.map((admin) => admin.id),
+        ];
+      }
+
+      await tx.notification.createMany({
+        data: [...new Set(recipients)].map((recipientId) => ({
+          userId: recipientId,
+          hospitalId: appointment.hospitalId,
+          title: notificationTitle[action],
+          message: notificationMessage[action],
+          linkedEntityType: 'APPOINTMENT',
+          linkedEntityId: appointmentId,
+        })),
+      });
+
+      return tx.appointment.findUnique({
+        where: { id: appointmentId },
+      });
     });
   }
 
