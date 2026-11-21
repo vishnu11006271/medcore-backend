@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 
 import {
   Body,
@@ -11,6 +12,8 @@ import { HospitalsService } from './hospitals.service.js';
 import { RegisterHospitalDto } from './dto/register-hospital.dto.js';
 
 @Controller('hospitals')
+@ApiTags('Hospital Registration')
+@ApiTags('Hospital Registration')
 export class HospitalRegistrationController {
   constructor(
     private readonly hospitalsService: HospitalsService,

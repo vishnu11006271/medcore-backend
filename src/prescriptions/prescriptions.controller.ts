@@ -1,3 +1,4 @@
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -18,6 +19,8 @@ import { PrescriptionsService } from './prescriptions.service.js';
 import { CreatePrescriptionDto } from './dto/create-prescription.dto.js';
 
 @Controller('prescriptions')
+@ApiTags('Prescriptions')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class PrescriptionsController {
   constructor(

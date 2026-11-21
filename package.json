@@ -42,7 +42,8 @@
     "pg": "^8.23.1",
     "razorpay": "^2.9.8",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "@nestjs/swagger": "^12.1.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^12.0.0",

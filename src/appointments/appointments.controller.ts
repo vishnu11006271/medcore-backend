@@ -1,3 +1,4 @@
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import {
   Body,
@@ -25,6 +26,10 @@ type AuthenticatedRequest = Request & {
 };
 
 @Controller('appointments')
+@ApiTags('Appointments')
+@ApiBearerAuth('access-token')
+@ApiTags('Appointments')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class AppointmentsController {
   constructor(

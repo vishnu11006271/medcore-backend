@@ -1,3 +1,4 @@
+import { ApiTags, ApiCookieAuth, ApiBearerAuth } from '@nestjs/swagger';
 
 import {
   Body,
@@ -25,6 +26,8 @@ import { Roles } from './decorators/roles.decorator.js';
 import { ResendVerificationOtpDto } from './dto/resend-verification-otp.dto.js';
 
 @Controller('auth')
+@ApiTags('Authentication')
+@ApiTags('Authentication')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -126,6 +129,7 @@ export class AuthController {
 
 
   
+  @ApiCookieAuth('refresh-cookie')
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(
@@ -163,6 +167,7 @@ export class AuthController {
   }
 
 
+  @ApiCookieAuth('refresh-cookie')
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(
@@ -192,6 +197,8 @@ export class AuthController {
 
   
   @Get('me')
+  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   async getMe(@Req() req: Request) {
     const authUser = req.user as {
@@ -209,6 +216,8 @@ export class AuthController {
     };
   }
 
+  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('SUPER_ADMIN')
   @Get('admin-only')

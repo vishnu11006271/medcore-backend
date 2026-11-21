@@ -1,3 +1,4 @@
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
@@ -10,6 +11,8 @@ import { StaffActor, StaffService } from './staff.service.js';
 type StaffRequest = Request & { user: StaffActor };
 
 @Controller('staff')
+@ApiTags('Hospital Staff')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('HOSPITAL_ADMIN')
 export class StaffController {
