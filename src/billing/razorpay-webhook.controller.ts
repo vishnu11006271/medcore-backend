@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 
 import {
   Controller,
@@ -13,6 +14,7 @@ import { Request } from 'express';
 import { BillingService } from './billing.service.js';
 
 @Controller('billing/webhooks')
+@ApiTags('Payment Webhooks')
 export class RazorpayWebhookController {
   constructor(
     private readonly billingService: BillingService,
