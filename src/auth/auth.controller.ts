@@ -1,4 +1,4 @@
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiCookieAuth } from '@nestjs/swagger';
 
 import {
   Body,
@@ -129,6 +129,7 @@ export class AuthController {
 
 
   
+  @ApiCookieAuth('refresh-cookie')
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(
@@ -166,6 +167,7 @@ export class AuthController {
   }
 
 
+  @ApiCookieAuth('refresh-cookie')
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(
