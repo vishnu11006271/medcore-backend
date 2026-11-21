@@ -27,6 +27,8 @@ import { InvoicePdfService } from './invoice-pdf.service.js';
 @Controller('billing')
 @ApiTags('Billing and Payments')
 @ApiBearerAuth('access-token')
+@ApiTags('Billing and Payments')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class BillingController {
   constructor(private readonly billingService: BillingService, private readonly invoicePdfService: InvoicePdfService) {}
