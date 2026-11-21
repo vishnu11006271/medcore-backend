@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 
 import {
   Body,
@@ -25,6 +26,7 @@ import { Roles } from './decorators/roles.decorator.js';
 import { ResendVerificationOtpDto } from './dto/resend-verification-otp.dto.js';
 
 @Controller('auth')
+@ApiTags('Authentication')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -192,6 +194,7 @@ export class AuthController {
 
   
   @Get('me')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   async getMe(@Req() req: Request) {
     const authUser = req.user as {
@@ -209,6 +212,7 @@ export class AuthController {
     };
   }
 
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('SUPER_ADMIN')
   @Get('admin-only')
