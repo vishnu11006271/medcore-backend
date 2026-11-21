@@ -1,3 +1,4 @@
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -33,6 +34,8 @@ type AuthenticatedRequest = Request & {
 };
 
 @Controller('users')
+@ApiTags('Platform Users')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('SUPER_ADMIN')
 export class UsersController {
